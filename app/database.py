@@ -1,48 +1,40 @@
 
-import sys
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 
-db_file = 'data.db'
+from database_setup import Base, Categories, Items
 
+engine = create_engine('sqlite:///item_catalog.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind=engine)
 
-def create_tables():
-    # Create categories table:
-    create_table = "CREATE TABLE IF NOT EXISTS categories " \
-                   "(id INTEGER PRIMARY KEY ASC, " \
-                   "name varchar(250) NOT NULL)"
-    _run_query(create_table)
-    # Create items table:
-    create_table = "CREATE TABLE IF NOT EXISTS items " \
-                   "(id INTEGER PRIMARY KEY ASC," \
-                   "name varchar(250) NOT NULL," \
-                   "description varchar(250) NOT NULL," \
-                   "category_id INTEGER NOT NULL," \
-                   "last_modified datetime NOT NULL," \
-                   "FOREIGN KEY (category_id) REFERENCES restaurant(id))"
-    _run_query(create_table)
+session = DBSession()
+soccer_category = Categories(name='Soccer')
+basketball_category = Categories(name='Basketball')
 
+# create:
+session.add_all([soccer_category, basketball_category])
+session.commit()
 
-def _run_query(query, *args):
-    '''
-    Run a query on the "news" database
-    :param query: string containing the query's SQL statement
-    :return: Query result
-    '''
-    global db_file
-    try:
-        connection = sqlite3.connect(db_file)
-    except sqlite3.Error as e:
-        print("Unable to connect to database!")
-        print(e.pgerror)
-        print(e.diag.message_detail)
-        sys.exit(1)
-    else:
-        cursor = connection.cursor()
-        result = cursor.execute(query, args)
-        connection.commit()
-        connection.close()
-        return result
+# read:
+for category in session.query(Categories).all():
+    print(category.name, category.id)
+print("---------------------------")
 
+# update:
+category_id = 1
+session.query(Categories).filter(Categories.id == category_id).update(
+    {"name": "Modified Category"}, synchronize_session='fetch')
+session.commit()
 
-if __name__ == '__main__':
-    create_tables()
+for category in session.query(Categories).all():
+    print(category.name, category.id)
+print("---------------------------")
+
+# delete:
+session.query(Categories).filter(Categories.id == category_id).\
+    delete(synchronize_session='fetch')
+session.commit()
+
+for category in session.query(Categories).all():
+    print(category.name, category.id)
