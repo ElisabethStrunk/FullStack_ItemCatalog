@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <h1>Categories</h1>
+        {% for c in categories %}
+            {{c.id}} | {{c.name}}
+            <br>
+        {% endfor %}
+    </body>
+</html>
