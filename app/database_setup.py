@@ -8,8 +8,9 @@ Base = declarative_base()
 
 class Categories(Base):
     __tablename__ = 'categories'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), nullable=False)
+    #id = Column(Integer, primary_key=True)
+    #name = Column(String(50), nullable=False)
+    name = Column(String(50), primary_key=True)
 
 
 class Items(Base):
@@ -17,7 +18,7 @@ class Items(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(100), nullable=False)
     description = Column(String(250), nullable=False)
-    category_id = Column(Integer, ForeignKey('categories.id'))
+    category = Column(Integer, ForeignKey('categories.name'))
     categories = relationship(Categories)
     last_modified = Column(DateTime, nullable=False)
 
