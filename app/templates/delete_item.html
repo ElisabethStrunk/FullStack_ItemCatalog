@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Lisa's Sports Item Catalog | Delete item
+    </title>
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}"
+          type="image/x-icon">
+    <link type="text/css"
+          rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div>
+        <h2>Delete Item</h2>
+        Are you sure you want to delete?
+        <br>
+        <br>
+        <a action="{{url_for('deleteItem', item_id=item.id)}}" method="post">
+            <button>Delete</button>
+        </a>
+        <a href="{{url_for('item', item_id=item.id)}}"
+               method="get">
+                Cancel
+        </a>
+    </div>
+</body>
+</html>

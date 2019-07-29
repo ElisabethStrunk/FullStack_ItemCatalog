@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Lisa's Sports Item Catalog | {{ item.name }}
+    </title>
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}"
+          type="image/x-icon">
+    <link type="text/css"
+          rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div>
+        <h2>{{item.name}}</h2>
+        <span>{{item.description}}</span>
+        <br>
+        <a href="{{url_for('editItem', item_id=item.id)}}" method="get">
+            Edit
+        </a> |
+        <a href="{{url_for('deleteItem', item_id=item.id)}}" method="get">
+            Delete
+        </a>
+    </div>
+</body>
+</html>

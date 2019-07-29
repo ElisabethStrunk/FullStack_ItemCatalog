@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        Lisa's Sports Item Catalog
+        Lisa's Sports Item Catalog | {{ category }}
     </title>
     <link rel="shortcut icon"
           href="{{ url_for('static', filename='favicon.ico') }}"
@@ -23,12 +23,11 @@
         {% endfor %}
     </div>
     <div>
-        <h2>Latest Items</h2>
-        {% for i in latest_items %}
+        <h2>{{category}} Items ({{number_of_items}} items)</h2>
+        {% for i in items %}
             <a href="{{url_for('item', item_id=i.id)}}" method="get">
-                {{i.name}} ({{i.category}})
+                {{i.name}}
             </a>
-            <br>
         {% endfor %}
     </div>
 </body>
