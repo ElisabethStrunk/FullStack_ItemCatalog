@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>
+            Lisa's Sports Item Catalog
+        </title>
+        <link rel="shortcut icon"
+              href="{{ url_for('static', filename='favicon.ico') }}"
+              type="image/x-icon">
+        <link type="text/css"
+              rel="stylesheet"
+              href="{{ url_for('static', filename='style.css') }}">
+    </head>
+    <body>
+        <h1>Categories</h1>
+        {% for c in categories %}
+            {{c.name}}
+            <br>
+        {% endfor %}
+    </body>
+</html>
