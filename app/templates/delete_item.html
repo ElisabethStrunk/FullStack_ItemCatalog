@@ -13,6 +13,18 @@
           href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
+    <div>
+        <h2>Delete Item</h2>
+        Are you sure you want to delete?
+        <br>
+        <br>
+        <a action="{{url_for('deleteItem', item_id=item.id)}}" method="post">
+            <button>Delete</button>
+        </a>
+        <a href="{{url_for('item', item_id=item.id)}}"
+               method="get">
+                Cancel
+        </a>
+    </div>
 </body>
 </html>

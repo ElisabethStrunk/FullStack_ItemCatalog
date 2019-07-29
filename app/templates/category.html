@@ -13,6 +13,22 @@
           href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-
+    <div>
+        <h2>Categories</h2>
+        {% for c in categories %}
+            <a href="{{url_for('category', name=c.name)}}" method="get">
+                {{c.name}}
+            </a>
+            <br>
+        {% endfor %}
+    </div>
+    <div>
+        <h2>{{category}} Items ({{number_of_items}} items)</h2>
+        {% for i in items %}
+            <a href="{{url_for('item', item_id=i.id)}}" method="get">
+                {{i.name}}
+            </a>
+        {% endfor %}
+    </div>
 </body>
 </html>
