@@ -19,7 +19,8 @@ def open_db_session():
 
     from .database_setup import Base, Categories, Items
 
-    engine = create_engine('sqlite:///item_catalog.db')
+    engine = create_engine('sqlite:///item_catalog.db',
+                           connect_args={'check_same_thread': False})
     Base.metadata.bind = engine
     db_session = sessionmaker(bind=engine)
     session = db_session()
