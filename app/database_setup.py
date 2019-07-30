@@ -23,5 +23,6 @@ class Items(Base):
     last_modified = Column(DateTime, nullable=False)
 
 
-engine = create_engine('sqlite:///item_catalog.db')
-Base.metadata.create_all(engine)
+def create_database():
+    engine = create_engine('sqlite:///item_catalog.db')
+    Base.metadata.create_all(engine)

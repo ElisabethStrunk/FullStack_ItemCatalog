@@ -5,6 +5,7 @@ Item Catalog
 TODO: write description
 """
 
+import os
 import datetime
 
 from flask import Flask, render_template, jsonify, request, redirect, url_for
@@ -13,6 +14,7 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database_setup import Base, Categories, Items
 
+
 __author__ = "Elisabeth M. Strunk"
 __version__ = 1.0
 __maintainer__ = "Elisabeth M. Strunk"
@@ -20,7 +22,12 @@ __email__ = "elisabeth.maria.strunk@gmail.com"
 __status__ = "Development"
 
 
-app = Flask(__name__)
+if not os.path.exists('item_catalog.db'):
+    from app.database_setup import create_database
+    from app.populate_database import populate_database
+
+    create_database()
+    populate_database()
 
 engine = create_engine('sqlite:///item_catalog.db',
                        connect_args={'check_same_thread': False})
@@ -43,6 +50,9 @@ def get_items(category):
 
 def get_item(item_id):
     return session.query(Items).filter_by(id=item_id).one()
+
+
+app = Flask(__name__)
 
 
 @app.route('/')
