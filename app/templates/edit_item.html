@@ -15,31 +15,36 @@
 <body>
     <div>
         <h2>Edit Item</h2>
-        <form action="{{url_for('editItem', item_id=item.id)}}" method="post">
+        <form action="{{url_for('edit_item', item_id=item.id)}}" method="post">
             Name:
             <br>
-            <input type="text" name="name" placeholder="{{item.name}}">
+            <input type="text" name="name" value="{{item.name}}"
+                   placeholder="{{item.name}}">
             <br>
             Description:
             <br>
-            <input type="text" name="description"
+            <input type="text" name="description" value="{{item.description}}"
                    placeholder="{{item.description}}">
             <br>
             Category:
             <br>
-            <select name="category">
+            <select name="category" value="{{item.category}}">
                 {% for c in categories %}
-                    <option value="{{c.name}}">{{c.name}}</option>
+                    {% if c.name == item.category %}
+                        <option value="{{c.name}}" selected>{{c.name}}</option>
+                    {% else %}
+                        <option value="{{c.name}}">{{c.name}}</option>
+                    {% endif %}
                 {% endfor %}
             </select>
             <br>
             <br>
             <input type="submit" value="Submit">
-            <a href="{{url_for('item', item_id=item.id)}}"
-               method="get">
-                Cancel
-            </a>
         </form>
+        <a href="{{url_for('item', item_id=item.id,
+               category=item.category)}}" method="get">
+                Cancel
+        </a>
     </div>
 </body>
 </html>

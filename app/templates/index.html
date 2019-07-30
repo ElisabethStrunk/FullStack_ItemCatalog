@@ -16,16 +16,20 @@
     <div>
         <h2>Categories</h2>
         {% for c in categories %}
-            <a href="{{url_for('category', name=c.name)}}" method="get">
+            <a href="{{url_for('category', category=c.name)}}" method="get">
                 {{c.name}}
             </a>
             <br>
         {% endfor %}
     </div>
     <div>
+        <a href="{{url_for('add_item')}}" method="get">
+                Add item
+        </a>
         <h2>Latest Items</h2>
         {% for i in latest_items %}
-            <a href="{{url_for('item', item_id=i.id)}}" method="get">
+            <a href="{{url_for('item', item_id=i.id, category=i.category)}}"
+               method="get">
                 {{i.name}} ({{i.category}})
             </a>
             <br>

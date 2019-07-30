@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Lisa's Sports Item Catalog | Add item
+    </title>
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}"
+          type="image/x-icon">
+    <link type="text/css"
+          rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div>
+        <h2>Add Item</h2>
+        <form action="{{url_for('add_item')}}" method="post">
+            Name:
+            <br>
+            <input type="text" name="name" placeholder="{{item_name}}"
+                   required>
+            <br>
+            Description:
+            <br>
+            <input type="text" name="description"
+                   placeholder="{{item_description}}" required>
+            <br>
+            Category:
+            <br>
+            <select name="category" required>
+                {% for c in categories %}
+                    <option value="{{c.name}}">{{c.name}}</option>
+                {% endfor %}
+            </select>
+            <br>
+            <br>
+            <input type="submit" value="Submit">
+        </form>
+        <a href="{{url_for('index')}}">
+                Cancel
+        </a>
+    </div>
+</body>
+</html>
