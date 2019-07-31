@@ -1,0 +1,33 @@
+:root {
+    /*Bold and Punchy Theme: */
+    --color-papaya:         #E24E42;
+    --color-mustard:        #E9B000;
+    --color-blush:          #EB6E80;
+    --color-aqua:           #008F95;
+    /*Cheerful and Sleek Theme: */
+    --color-blueberry:      #6B7A8F;
+    --color-apricot:        #F7882F;
+    --color-citrus:         #F7C331;
+    --color-apple-core:     #DCC7AA;
+    /* Pretty Pastels Theme: */
+    --color-powder:         #BFD8D2;
+    --color-peach-light:    #FEDCD2;
+    --color-warm:           #DF744A;
+    --color-lemon:          #DCB239;
+    /* Luxurious and Modern Theme: */
+    --color-navy-blue:      #0F1626;
+    --color-leather:        #AB987A;
+    --color-coral:          #FF533D;
+    --color-eggshell:       #F5F5F5;
+    /* Retro Inspired Theme: */
+    --color-butter:         #FEDC3D;
+    --color-black:          #000000;
+    --color-azure:          #01ABAA;
+    --color-peach-dark:     #FEA680;
+    /*Vronis Cupcake Theme: */
+    --color-v-ligth-rose:   #f2dcec;
+    --color-v-dark-rose:    #e5c4d7;
+    --color-v-pastel-blue:  #c4eef2;
+    --color-v-blush:        #EB6E80;
+    --color-v-aqua-green:   #66af9e;
+}

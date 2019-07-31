@@ -1,0 +1,112 @@
+@import "colors.css";
+
+:root {
+    --header-background: var(--color-aqua);
+    --h1-font-size: 75px;
+    --h1-letter-spacing: 20px;
+}
+
+body {
+    background-color: var(--color-v-pastel-blue);
+    margin: 20px 175px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+time {
+    font-style: oblique;
+}
+
+#header {
+    margin: 0px 0px 20px 0px;
+    padding: 0px 0px;
+}
+
+#header_pic {
+    border-radius: 0%;
+    width: 50%;
+    height: auto;
+    padding: 0px 0px;
+    margin: 0px;
+    float: right;
+}
+
+
+img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+#header {
+    background-color: var(--header-background);
+    overflow: auto;
+    text-align: center;
+    clear: both;
+}
+
+h1 {
+    font-family: "Montserrat:700", sans-serif;
+    font-size: 37.5px;
+    letter-spacing: 10px;
+    text-align: center;
+    color: black;
+    text-shadow: 0px 2px 0px var(--header-background), 0px 4px 0px white;
+}
+
+h2 {
+    font-family: "Montserrat:700", sans-serif;
+    font-size: 25px;
+    letter-spacing: 5px;
+    text-align: left;
+    color: white;
+    background-color: var(--color-papaya);
+    padding: 7px;
+}
+
+h3 {
+    font-family: 'Pacifico', cursive;
+    font-size: 25px;
+    letter-spacing: 5px;
+    text-align: center;
+    color: white;
+}
+
+h4 {
+    font-family: "Montserrat", Helvetica, sans-serif;
+    font-size: 20px;
+    font-weight: 100;
+    padding: 50px;
+    color: black;
+}
+
+#thank-you-note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12px;
+}
+
+footer {
+    clear: both;
+    padding: 25px 0px;
+}
+
+.clear {
+    clear: both;
+}
+
+.block {
+    padding: 7px;
+}
+
+.hover_img a {
+    position:relative;
+}
+
+.hover_img a span {
+    position:absolute;
+    display:none;
+    z-index:99;
+}
+
+.hover_img a:hover span {
+    display:block;
+}
