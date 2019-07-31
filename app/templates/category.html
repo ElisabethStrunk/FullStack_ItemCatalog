@@ -16,14 +16,14 @@
           type="text/css">
 </head>
 <body>
+    <div id="header" class="header">
+        <h1>
+            <a href="{{url_for('index')}}">
+                Elisabeth's Sports Item Catalog
+            </a>
+        </h1>
+    </div>
     <div>
-        <div id="header" class="header">
-            <h1>
-                <a href="{{url_for('index')}}">
-                    Elisabeth's Sports Item Catalog
-                </a>
-            </h1>
-        </div>
         <h2>Categories</h2>
         <div class="block">
             {% for c in categories %}
