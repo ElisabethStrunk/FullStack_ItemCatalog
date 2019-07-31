@@ -80,6 +80,7 @@ h2 {
 footer {
     clear: both;
     padding: 25px 0px;
+    text-align: right;
 }
 
 .clear {
