@@ -112,6 +112,10 @@ footer {
     width: 75%;
 }
 
+.inline {
+    display: inline;
+}
+
 /* unvisited link */
 a:link {
     text-decoration:  none;
