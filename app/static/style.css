@@ -97,6 +97,10 @@ footer {
     padding: 7px;
 }
 
+.button_lineup {
+    margin: 20px 0px;
+}
+
 /* unvisited link */
 a:link {
     text-decoration:  none;
@@ -111,7 +115,6 @@ a:visited {
 /* mouse over link */
 a:hover {
   color: var(--color-mustard);
-  text-decoration:  underline;
 }
 
 /* style for buttons */
