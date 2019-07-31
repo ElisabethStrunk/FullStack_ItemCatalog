@@ -97,16 +97,19 @@ footer {
     padding: 7px;
 }
 
-.hover_img a {
-    position:relative;
+/* unvisited link */
+a:link {
+    text-decoration:  none;
 }
 
-.hover_img a span {
-    position:absolute;
-    display:none;
-    z-index:99;
+/* visited link */
+a:visited {
+    color: black;
+    text-decoration:  none;
 }
 
-.hover_img a:hover span {
-    display:block;
+/* mouse over link */
+a:hover {
+  color: var(--color-mustard);
+  text-decoration:  underline;
 }
