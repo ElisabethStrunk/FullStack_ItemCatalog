@@ -47,8 +47,12 @@
         <div class="block">
             {% for i in latest_items %}
                 <a href="{{url_for('item', item_id=i.id, category=i.category)}}"
-                   method="get">
-                    {{i.name}} ({{i.category}})
+                   method="get" class="inline">
+                    {{i.name}}
+                </a>
+                <a href="{{url_for('category', category=i.category)}}"
+                   method="get" class="aqua">
+                    ({{i.category}})
                 </a>
                 <br>
             {% endfor %}

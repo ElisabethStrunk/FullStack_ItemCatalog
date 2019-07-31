@@ -63,20 +63,13 @@ h2 {
     padding: 7px;
 }
 
-h3 {
-    font-family: 'Pacifico', cursive;
-    font-size: 25px;
-    letter-spacing: 5px;
-    text-align: center;
-    color: white;
+.aqua {
+    color: var(--color-aqua);
+    font-family: ;
 }
 
-h4 {
-    font-family: "Montserrat", Helvetica, sans-serif;
-    font-size: 20px;
-    font-weight: 100;
-    padding: 50px;
-    color: black;
+.aqua:visited {
+    color: var(--color-aqua);
 }
 
 #thank-you-note {
@@ -128,7 +121,7 @@ a:visited {
 }
 
 /* mouse over link */
-a:hover {
+a:hover, .aqua:hover {
   color: var(--color-mustard);
 }
 
