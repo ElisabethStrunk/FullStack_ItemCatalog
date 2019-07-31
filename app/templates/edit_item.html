@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        Lisa's Sports Item Catalog | Edit item
+        Elisabeth's Sports Item Catalog | Edit item
     </title>
     <link rel="shortcut icon"
           href="{{ url_for('static', filename='favicon.ico') }}"
@@ -11,40 +11,55 @@
     <link type="text/css"
           rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+          rel="stylesheet"
+          type="text/css">
 </head>
 <body>
+    <div id="header" class="header">
+        <h1>
+            <a href="{{url_for('index')}}">
+                Elisabeth's Sports Item Catalog
+            </a>
+        </h1>
+    </div>
     <div>
         <h2>Edit Item</h2>
-        <form action="{{url_for('edit_item', item_id=item.id)}}" method="post">
-            Name:
-            <br>
-            <input type="text" name="name" value="{{item.name}}"
-                   placeholder="{{item.name}}">
-            <br>
-            Description:
-            <br>
-            <input type="text" name="description" value="{{item.description}}"
-                   placeholder="{{item.description}}">
-            <br>
-            Category:
-            <br>
-            <select name="category" value="{{item.category}}">
-                {% for c in categories %}
-                    {% if c.name == item.category %}
-                        <option value="{{c.name}}" selected>{{c.name}}</option>
-                    {% else %}
-                        <option value="{{c.name}}">{{c.name}}</option>
-                    {% endif %}
-                {% endfor %}
-            </select>
-            <br>
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-        <a href="{{url_for('item', item_id=item.id,
-               category=item.category)}}" method="get">
-                Cancel
-        </a>
+        <div class="block">
+            <form action="{{url_for('edit_item', item_id=item.id)}}" method="post">
+                Name:
+                <br>
+                <input type="text" name="name" value="{{item.name}}"
+                       placeholder="{{item.name}}" maxlength="100"
+                       class="form_field">
+                <br>
+                Description:
+                <br>
+                <input type="text" name="description" value="{{item.description}}"
+                       placeholder="{{item.description}}" maxlength="250"
+                       class="form_field">
+                <br>
+                Category:
+                <br>
+                <select name="category" value="{{item.category}}">
+                    {% for c in categories %}
+                        {% if c.name == item.category %}
+                            <option value="{{c.name}}" selected>{{c.name}}</option>
+                        {% else %}
+                            <option value="{{c.name}}">{{c.name}}</option>
+                        {% endif %}
+                    {% endfor %}
+                </select>
+                <br>
+                <br>
+                <input type="submit" value="Submit" class="submit_button">
+                 |
+                <a href="{{url_for('item', item_id=item.id,
+                   category=item.category)}}" method="get">
+                    <button>Cancel</button>
+                </a>
+            </form>
+        </div>
     </div>
 </body>
 </html>

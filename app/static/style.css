@@ -101,6 +101,17 @@ footer {
     margin: 20px 0px;
 }
 
+.form_field_big {
+    width: 75%;
+    height: 400px;
+    text-align: top;
+    word-wrap: break-word;
+}
+
+.form_field {
+    width: 75%;
+}
+
 /* unvisited link */
 a:link {
     text-decoration:  none;
@@ -119,7 +130,7 @@ a:hover {
 
 /* style for buttons */
 /* code initially created with https://www.bestcssbuttongenerator.com */
-button {
+button, .submit_button {
 	-moz-box-shadow:inset 0px 1px 3px 0px #91b8b3;
 	-webkit-box-shadow:inset 0px 1px 3px 0px #91b8b3;
 	box-shadow:inset 0px 1px 3px 0px #91b8b3;
@@ -147,7 +158,7 @@ button {
 	text-shadow:0px -1px 0px #2b665e;
 }
 
-button:hover {
+button:hover, .submit_button:hover {
 	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #166366), color-stop(1, #009095));
 	background:-moz-linear-gradient(top, #166366 5%, #009095 100%);
 	background:-webkit-linear-gradient(top, #166366 5%, #009095 100%);
@@ -158,7 +169,7 @@ button:hover {
 	background-color:#166366;
 }
 
-button:active {
+button:active, .submit_button:active {
 	position:relative;
 	top:1px;
 }
