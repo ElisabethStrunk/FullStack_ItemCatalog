@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>
-        Lisa's Sports Item Catalog | Add item
+        Elisabeth's Sports Item Catalog | Add item
     </title>
     <link rel="shortcut icon"
           href="{{ url_for('static', filename='favicon.ico') }}"
@@ -11,35 +11,51 @@
     <link type="text/css"
           rel="stylesheet"
           href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+          rel="stylesheet"
+          type="text/css">
 </head>
 <body>
+    <div id="header" class="header">
+        <h1>
+            <a href="{{url_for('index')}}">
+                Elisabeth's Sports Item Catalog
+            </a>
+        </h1>
+    </div>
     <div>
         <h2>Add Item</h2>
-        <form action="{{url_for('add_item')}}" method="post">
-            Name:
-            <br>
-            <input type="text" name="name" placeholder="{{item_name}}"
-                   required>
-            <br>
-            Description:
-            <br>
-            <input type="text" name="description"
-                   placeholder="{{item_description}}" required>
-            <br>
-            Category:
-            <br>
-            <select name="category" required>
-                {% for c in categories %}
-                    <option value="{{c.name}}">{{c.name}}</option>
-                {% endfor %}
-            </select>
-            <br>
-            <br>
-            <input type="submit" value="Submit">
-        </form>
-        <a href="{{url_for('index')}}">
-                Cancel
-        </a>
+        <div class="block">
+            <form action="{{url_for('add_item')}}" method="post"
+                  class="inline">
+                Name:
+                <br>
+                <input type="text" name="name" placeholder="{{item_name}}"
+                       maxlength="100" class="form_field"
+                       required>
+                <br>
+                Description:
+                <br>
+                <input type="text" name="description"
+                       placeholder="{{item_description}}"
+                       maxlength="250" class="form_field"
+                       required>
+                <br>
+                Category:
+                <br>
+                <select name="category" required>
+                    {% for c in categories %}
+                        <option value="{{c.name}}">{{c.name}}</option>
+                    {% endfor %}
+                </select>
+                <br>
+                <br>
+                <input type="submit" value="Submit" class="submit_button">
+            </form>
+            <a href="{{url_for('index')}}">
+                    <button>Cancel</button>
+            </a>
+        </div>
     </div>
 </body>
 </html>
