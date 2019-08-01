@@ -57,6 +57,7 @@ app = Flask(__name__)
 
 @app.route('/')
 @app.route('/catalog')
+@app.route('/catalog/')
 def index():
     categories = get_categories()
     latest_items = get_latest_items()
@@ -67,12 +68,16 @@ def index():
 @app.route('/catalog/<string:category>')
 @app.route('/catalog/<string:category>/items')
 def category(category):
-    categories = get_categories()
-    items = get_items(category)
-    number_of_items = len(items.all())
-    return render_template('category.html', categories=categories,
-                           category=category, items=items,
-                           number_of_items=number_of_items)
+    if category in [c.name for c in get_categories()]:
+        categories = get_categories()
+        items = get_items(category)
+        number_of_items = len(items.all())
+        return render_template('category.html', categories=categories,
+                               category=category, items=items,
+                               number_of_items=number_of_items)
+    else:
+        return jsonify({'message': "No category found with name "
+                                   "{}!".format(category)}), 404
 
 
 @app.route('/catalog/<string:category>/<string:item_id>')
@@ -174,16 +179,20 @@ def index_json():
 @app.route('/catalog/<string:category>.json')
 @app.route('/catalog/<string:category>/items.json')
 def category_json(category):
-    items = get_items(category)
-    number_of_items = len(items.all())
-    serialized_items = []
-    for item in get_items(category):
-        serialized_items.append(item.serialize)
-    serialized_category = {
-        'Name': category,
-        'Number fo items': number_of_items,
-        'Items': serialized_items}
-    return jsonify(Category=serialized_category)
+    if category in [c.name for c in get_categories()]:
+        items = get_items(category)
+        number_of_items = len(items.all())
+        serialized_items = []
+        for item in get_items(category):
+            serialized_items.append(item.serialize)
+        serialized_category = {
+            'Name': category,
+            'Number fo items': number_of_items,
+            'Items': serialized_items}
+        return jsonify(Category=serialized_category)
+    else:
+        return jsonify({'message': "No category found with name "
+                                   "{}!".format(category)}), 404
 
 
 @app.route('/catalog/<string:category>/<string:item_id>.json')
