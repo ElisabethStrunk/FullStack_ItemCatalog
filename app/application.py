@@ -57,6 +57,7 @@ app = Flask(__name__)
 
 @app.route('/')
 @app.route('/catalog')
+@app.route('/catalog/')
 def index():
     categories = get_categories()
     latest_items = get_latest_items()
@@ -67,22 +68,31 @@ def index():
 @app.route('/catalog/<string:category>')
 @app.route('/catalog/<string:category>/items')
 def category(category):
-    categories = get_categories()
-    items = get_items(category)
-    number_of_items = len(items.all())
-    return render_template('category.html', categories=categories,
-                           category=category, items=items,
-                           number_of_items=number_of_items)
+    if category in [c.name for c in get_categories()]:
+        categories = get_categories()
+        items = get_items(category)
+        number_of_items = len(items.all())
+        return render_template('category.html', categories=categories,
+                               category=category, items=items,
+                               number_of_items=number_of_items)
+    else:
+        return jsonify({'message': "No category found with name "
+                                   "{}!".format(category)}), 404
 
 
 @app.route('/catalog/<string:category>/<string:item_id>')
 def item(category, item_id):
     item = get_item(item_id)
-    if item.category != category:
-        return jsonify({'message': "The item you requested was not found in " /
-                                   "category{}!".format(category)}), 404
+    if item:
+        if item.category != category:
+            return jsonify({'message': "The item you requested was not found "
+                                       "in category {}!".format(category)}), \
+                   404
+        else:
+            return render_template('item.html', item=item)
     else:
-        return render_template('item.html', item=item)
+        return jsonify({'message': "No item found with id "
+                                   "{}!".format(item_id)}), 404
 
 
 @app.route('/catalog/<string:item_id>/edit', methods=['GET', 'POST'])
@@ -99,6 +109,7 @@ def edit_item(item_id):
             item.description = request.form['description']
         if request.form['category']:
             item.category = request.form['category']
+        item.last_modified = datetime.datetime.now()
         session.add(item)
         session.commit()
         return redirect(url_for('item', item_id=item_id,
@@ -142,6 +153,62 @@ def add_item():
                                 category=item.category))
     else:
         return 405
+
+
+'''
+JSON endpoints:
+'''
+
+
+@app.route('/catalog.json')
+def index_json():
+    categories = get_categories()
+    serialized_catalog = {}
+    for category in categories:
+        serialized_catalog.update(
+            {category.name: {}}
+        )
+        serialized_items = []
+        for item in get_items(category.name):
+            serialized_items.append(item.serialize)
+        serialized_catalog[category.name].update(
+            {'Items': serialized_items}
+        )
+    return jsonify(Catalog=serialized_catalog)
+
+
+@app.route('/catalog/<string:category>.json')
+@app.route('/catalog/<string:category>/items.json')
+def category_json(category):
+    if category in [c.name for c in get_categories()]:
+        items = get_items(category)
+        number_of_items = len(items.all())
+        serialized_items = []
+        for item in get_items(category):
+            serialized_items.append(item.serialize)
+        serialized_category = {
+            'Name': category,
+            'Number fo items': number_of_items,
+            'Items': serialized_items}
+        return jsonify(Category=serialized_category)
+    else:
+        return jsonify({'message': "No category found with name "
+                                   "{}!".format(category)}), 404
+
+
+@app.route('/catalog/<string:category>/<string:item_id>.json')
+def item_in_category_json(category, item_id):
+    item = get_item(item_id)
+    if item:
+        if item.category != category:
+            return jsonify({'message': "The item you requested was not found "
+                                       "in category {}!".format(category)}), \
+                   404
+        else:
+            return jsonify(Item=item.serialize)
+    else:
+        return jsonify({'message': "No item found with id "
+                                   "{}!".format(item_id)}), 404
 
 
 if __name__ == '__main__':
