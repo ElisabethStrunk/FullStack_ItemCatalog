@@ -1,0 +1,173 @@
+@import "colors.css";
+
+:root {
+    --header-background: var(--color-aqua);
+    --h1-font-size: 75px;
+    --h1-letter-spacing: 20px;
+}
+
+body {
+    background-color: var(--color-v-pastel-blue);
+    margin: 20px 175px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+time {
+    font-style: oblique;
+}
+
+#header {
+    margin: 0px 0px 20px 0px;
+    padding: 0px 0px;
+}
+
+#header_pic {
+    border-radius: 0%;
+    width: 50%;
+    height: auto;
+    padding: 0px 0px;
+    margin: 0px;
+    float: right;
+}
+
+
+img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+
+#header {
+    background-color: var(--header-background);
+    overflow: auto;
+    text-align: center;
+    clear: both;
+}
+
+h1 {
+    font-family: "Montserrat:700", sans-serif;
+    font-size: 37.5px;
+    letter-spacing: 10px;
+    text-align: center;
+    color: black;
+    text-shadow: 0px 2px 0px var(--header-background), 0px 4px 0px white;
+}
+
+h2 {
+    font-family: "Montserrat:700", sans-serif;
+    font-size: 25px;
+    letter-spacing: 5px;
+    text-align: left;
+    color: white;
+    background-color: var(--color-papaya);
+    padding: 7px;
+}
+
+.aqua {
+    color: var(--color-aqua);
+    font-family: ;
+}
+
+.aqua:visited {
+    color: var(--color-aqua);
+}
+
+#thank-you-note {
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 12px;
+}
+
+footer {
+    clear: both;
+    padding: 25px 0px;
+    text-align: right;
+}
+
+.clear {
+    clear: both;
+}
+
+.block {
+    padding: 7px;
+}
+
+.button_lineup {
+    margin: 20px 0px;
+}
+
+.form_field_big {
+    width: 75%;
+    height: 400px;
+    text-align: top;
+    word-wrap: break-word;
+}
+
+.form_field {
+    width: 75%;
+}
+
+.inline {
+    display: inline;
+}
+
+/* unvisited link */
+a:link {
+    text-decoration:  none;
+}
+
+/* visited link */
+a:visited {
+    color: black;
+    text-decoration:  none;
+}
+
+/* mouse over link */
+a:hover, .aqua:hover {
+  color: var(--color-mustard);
+}
+
+/* style for buttons */
+/* code initially created with https://www.bestcssbuttongenerator.com */
+button, .submit_button {
+	-moz-box-shadow:inset 0px 1px 3px 0px #91b8b3;
+	-webkit-box-shadow:inset 0px 1px 3px 0px #91b8b3;
+	box-shadow:inset 0px 1px 3px 0px #91b8b3;
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #009095), color-stop(1, #166366));
+	background:-moz-linear-gradient(top, #009095 5%, #166366 100%);
+	background:-webkit-linear-gradient(top, #009095 5%, #166366 100%);
+	background:-o-linear-gradient(top, #009095 5%, #166366 100%);
+	background:-ms-linear-gradient(top, #009095 5%, #166366 100%);
+	background:linear-gradient(to bottom, #009095 5%, #166366 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#009095', endColorstr='#166366',GradientType=0);
+	background-color:#009095;
+	-moz-border-radius:5px;
+	-webkit-border-radius:5px;
+	border-radius:5px;
+	border:1px solid #566963;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family: 'Source Sans Pro', Arial, sans-serif;
+	font-size: 12px;
+	font-weight:bold;
+	letter-spacing: 1px;
+	padding: 6px 20px;
+	text-decoration:none;
+	text-shadow:0px -1px 0px #2b665e;
+}
+
+button:hover, .submit_button:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #166366), color-stop(1, #009095));
+	background:-moz-linear-gradient(top, #166366 5%, #009095 100%);
+	background:-webkit-linear-gradient(top, #166366 5%, #009095 100%);
+	background:-o-linear-gradient(top, #166366 5%, #009095 100%);
+	background:-ms-linear-gradient(top, #166366 5%, #009095 100%);
+	background:linear-gradient(to bottom, #166366 5%, #009095 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#166366', endColorstr='#009095',GradientType=0);
+	background-color:#166366;
+}
+
+button:active, .submit_button:active {
+	position:relative;
+	top:1px;
+}
