@@ -23,7 +23,7 @@ __status__ = "Development"
 
 
 '''
-CONNECTION TO THE DATABASE
+# CONNECTION TO THE DATABASE
   *  If the database file does not exist yet, create the database and populate 
      it with dummy data.
   *  Open a connection to the database
@@ -79,7 +79,18 @@ def delete_item_from_db(item):
     return None
 
 
+'''
+# WEB APPLICATION
+  *  Initialize Flask application
+  *  define all routes and their endpoint functions
+'''
+
 app = Flask(__name__)
+
+
+'''
+## Endpoints with rendered frontend:
+'''
 
 
 @app.route('/')
@@ -180,7 +191,7 @@ def add_item():
 
 
 '''
-JSON endpoints:
+## JSON endpoints:
 '''
 
 
@@ -234,6 +245,10 @@ def item_in_category_json(category, item_id):
         return jsonify({'message': "No item found with id "
                                    "{}!".format(item_id)}), 404
 
+
+'''
+# RUN SERVER APPLICATION
+'''
 
 if __name__ == '__main__':
     app.debug = True
