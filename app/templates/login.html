@@ -31,11 +31,19 @@
     <div>
         <h2>Login</h2>
         <div class="block">
-            <!-- Code for sign-in button and sign-out link provided by Google
+            <!-- Code for button, sign-in and sign-out provided by Google
              at https://developers.google.com/identity/sign-in/web/sign-in -->
             <div class="g-signin2" data-onsuccess="onSignIn"></div>
             <a href="#" onclick="signOut();">Sign out</a>
             <script>
+                function onSignIn(googleUser) {
+                    var profile = googleUser.getBasicProfile();
+                    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+                    console.log('Name: ' + profile.getName());
+                    console.log('Image URL: ' + profile.getImageUrl());
+                    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+                }
+
                 function signOut() {
                     var auth2 = gapi.auth2.getAuthInstance();
                     auth2.signOut().then(function () {
