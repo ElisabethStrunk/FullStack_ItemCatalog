@@ -7,8 +7,11 @@ TODO: write description
 
 import os
 import datetime
+import random
+import string
 
 from flask import Flask, render_template, jsonify, request, redirect, url_for
+from flask import session as login_session
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
@@ -81,11 +84,12 @@ def delete_item_from_db(item):
 
 '''
 # WEB APPLICATION
-  *  Initialize Flask application
+  *  Initialize Flask application and set secret key for security
   *  define all routes and their endpoint functions
 '''
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.urandom(16)
 
 
 '''
@@ -244,6 +248,19 @@ def item_in_category_json(category, item_id):
     else:
         return jsonify({'message': "No item found with id "
                                    "{}!".format(item_id)}), 404
+
+
+'''
+#   AUTHENTICATION AND AUTHORIZATION
+'''
+
+
+@app.route('/login')
+def show_login():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in range(32))  # anti-forgery state token
+    login_session['state'] = state
+    return render_template('login.html')
 
 
 '''
