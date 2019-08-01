@@ -109,6 +109,7 @@ def edit_item(item_id):
             item.description = request.form['description']
         if request.form['category']:
             item.category = request.form['category']
+        item.last_modified = datetime.datetime.now()
         session.add(item)
         session.commit()
         return redirect(url_for('item', item_id=item_id,
