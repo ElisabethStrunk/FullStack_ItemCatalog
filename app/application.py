@@ -166,6 +166,21 @@ def index_json():
     return jsonify(Catalog=serialized_catalog)
 
 
+@app.route('/catalog/<string:category>.json')
+@app.route('/catalog/<string:category>/items.json')
+def category_json(category):
+    items = get_items(category)
+    number_of_items = len(items.all())
+    serialized_items = []
+    for item in get_items(category):
+        serialized_items.append(item.serialize)
+    serialized_category = {
+        'Name': category,
+        'Number fo items': number_of_items,
+        'Items': serialized_items}
+    return jsonify(Category=serialized_category)
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='localhost', port=5000)
