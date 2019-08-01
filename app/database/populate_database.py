@@ -10,7 +10,7 @@ import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.database_setup import Base, Categories, Items
+from app.database.database_setup import Base, Categories, Items
 
 
 def populate_database():

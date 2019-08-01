@@ -12,7 +12,7 @@ from flask import Flask, render_template, jsonify, request, redirect, url_for
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
-from app.database_setup import Base, Categories, Items
+from app.database.database_setup import Base, Categories, Items
 
 
 __author__ = "Elisabeth M. Strunk"
@@ -30,8 +30,8 @@ CONNECTION TO THE DATABASE
   *  Define functions that handle the interaction with the database. 
 '''
 if not os.path.exists('item_catalog.db'):
-    from app.database_setup import create_database
-    from app.populate_database import populate_database
+    from app.database.database_setup import create_database
+    from app.database.populate_database import populate_database
 
     create_database()
     populate_database()
