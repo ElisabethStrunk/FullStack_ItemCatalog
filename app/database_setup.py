@@ -8,9 +8,13 @@ Base = declarative_base()
 
 class Categories(Base):
     __tablename__ = 'categories'
-    #id = Column(Integer, primary_key=True)
-    #name = Column(String(50), nullable=False)
     name = Column(String(50), primary_key=True)
+
+    @property
+    def serialize(self):
+        return {
+            'name': self.name
+        }
 
 
 class Items(Base):
@@ -21,6 +25,16 @@ class Items(Base):
     category = Column(Integer, ForeignKey('categories.name'))
     categories = relationship(Categories)
     last_modified = Column(DateTime, nullable=False)
+
+    @property
+    def serialize(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'category': self.category,
+            'last_modified': self.last_modified
+        }
 
 
 def create_database():

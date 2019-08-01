@@ -144,6 +144,28 @@ def add_item():
         return 405
 
 
+'''
+JSON endpoints:
+'''
+
+
+@app.route('/catalog.json')
+def index_json():
+    categories = get_categories()
+    serialized_catalog = {}
+    for category in categories:
+        serialized_catalog.update(
+            {category.name: {}}
+        )
+        serialized_items = []
+        for item in get_items(category.name):
+            serialized_items.append(item.serialize)
+        serialized_catalog[category.name].update(
+            {'Items': serialized_items}
+        )
+    return jsonify(Catalog=serialized_catalog)
+
+
 if __name__ == '__main__':
     app.debug = True
     app.run(host='localhost', port=5000)
