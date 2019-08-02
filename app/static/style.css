@@ -63,9 +63,14 @@ h2 {
     padding: 7px;
 }
 
+h3 {
+    color: #008F95;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
+}
+
 .aqua {
     color: var(--color-aqua);
-    font-family: ;
 }
 
 .aqua:visited {

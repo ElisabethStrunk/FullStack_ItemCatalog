@@ -5,13 +5,25 @@ Item Catalog
 TODO: write description
 """
 
+# General imports
 import os
 import datetime
+
+# Security-related imports
 import random
 import string
+import json
+import httplib2
 
-from flask import Flask, render_template, jsonify, request, redirect, url_for
 from flask import session as login_session
+from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
+
+# Server application-related imports
+from flask import Flask, render_template, jsonify, request, redirect, \
+    url_for, flash
+
+# Database-related imports
+import requests
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
@@ -90,7 +102,6 @@ def delete_item_from_db(item):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(16)
-
 
 '''
 ## Endpoints with rendered frontend:
@@ -251,8 +262,11 @@ def item_in_category_json(category, item_id):
 
 
 '''
-#   AUTHENTICATION AND AUTHORIZATION
+# AUTHENTICATION AND AUTHORIZATION
 '''
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Restaurant Menu App"
 
 
 @app.route('/login')
@@ -260,7 +274,89 @@ def show_login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))  # anti-forgery state token
     login_session['state'] = state
-    return render_template('login.html')
+    return render_template('login.html', state=state)
+
+
+@app.route('/gconnect', methods=['POST'])
+def gconnect():
+    """
+    Code of this function adapted from the code provided by Udemy instructor
+    Lorenzo Brown at
+    https://github.com/udacity/ud330/blob/master/Lesson2/step5/project.py
+    """
+    # Validate state token
+    if request.args.get('state') != login_session['state']:
+        return jsonify({'message': "Invalid state parameter"}), 401
+    # Obtain authorization code
+    code = request.data
+    try:
+        # Upgrade the authorization code into a credentials object
+        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow.redirect_uri = 'postmessage'
+        credentials = oauth_flow.step2_exchange(code)
+    except FlowExchangeError:
+        return jsonify(
+            {'message': "Failed to upgrade the authorization code."}), 401
+
+    # Check that the access token is valid.
+    access_token = credentials.access_token
+    url = (
+        f'https://www.googleapis.com/oauth2/v1/'
+        f'tokeninfo?access_token={access_token}')
+    h = httplib2.Http()
+    result = json.loads(h.request(url, 'GET')[1])
+
+    # If there was an error in the access token info, abort.
+    if result.get('error'):
+        return jsonify(
+            {'message': "{}".format(result.get('error'))}), 500
+
+    # Verify that the access token is used for the intended user.
+    gplus_id = credentials.id_token['sub']
+    if result['user_id'] != gplus_id:
+        return jsonify(
+            {'message': "Token's user ID doesn't match given user ID."}), 401
+
+    # Verify that the access token is valid for this app.
+    if result['issued_to'] != CLIENT_ID:
+        return jsonify(
+            {'message': "Token's client ID does not match app's."}), 401
+
+    stored_access_token = login_session.get('access_token')
+    stored_gplus_id = login_session.get('gplus_id')
+    if (stored_access_token is not None) and (gplus_id == stored_gplus_id):
+        return jsonify(
+            {'message': "Current user is already connected."}), 200
+
+    # Store the access token in the session for later use.
+    login_session['access_token'] = credentials.access_token
+    login_session['gplus_id'] = gplus_id
+
+    # Get user info
+    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    params = {'access_token': credentials.access_token, 'alt': 'json'}
+    answer = requests.get(userinfo_url, params=params)
+
+    data = answer.json()
+
+    login_session['username'] = data['name']
+    login_session['picture'] = data['picture']
+    login_session['email'] = data['email']
+
+    # Assemble output message such, that a welcome text and the user's
+    # profile picture will be displayed on the page
+    output = '<h3 style = "text-align: center;">' \
+             f'Welcome, {login_session["username"]}!' \
+             '</h3>' \
+             f'<img src="{login_session["picture"]} " ' \
+             'align="middle" ' \
+             'style = "width: 150px; height: 150px; ' \
+             'display: block; margin-left: auto; margin-right: auto;' \
+             'border-radius: 50%;' \
+             '-webkit-border-radius: 50%; ' \
+             '-moz-border-radius: 50%;">' \
+    # flash("You are now logged in as {}".format(login_session['username'])) TODO:make this work
+    return output, 200
 
 
 '''

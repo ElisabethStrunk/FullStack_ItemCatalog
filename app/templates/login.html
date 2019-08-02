@@ -15,10 +15,24 @@
           rel="stylesheet"
           type="text/css">
 
-    <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
-    <script src="https://apis.google.com/js/platform.js" async defer></script>
-    <meta name="google-signin-client_id" content="705536674302-69vll8pod29taqh1u0apft2ff6llcm3c.apps.googleusercontent.com">
-    <!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <!-- PRE-REQUISITES FOR GOOGLE SIGN-IN -->
+    <!-- Code provided by Udacity mentor Zeeshan A. in the
+    Udacity Student Hub (thread-11439638899-1138379) as an
+    answer to a question concerning deprecated course material
+    on July 31, 2019 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start"
+            async defer></script>
+    <script>
+        function start() {
+            gapi.load('auth2', function() {
+                auth2 = gapi.auth2.init({
+                    client_id: '705536674302-69vll8pod29taqh1u0apft2ff6llcm3c.apps.googleusercontent.com'
+                });
+            });
+        }
+    </script>
+    <!-- END PRE-REQUISITES FOR GOOGLE SIGN-IN -->
 </head>
 <body>
     <div id="header" class="header">
@@ -31,20 +45,46 @@
     <div>
         <h2>Login</h2>
         <div class="block">
-            <!-- Code for sign-in button and sign-out link provided by Google
-             at https://developers.google.com/identity/sign-in/web/sign-in -->
-            <div id="signin_button" class="g-signin2" data-onsuccess="onSignIn">Sign in</div>
-            <a href="#" onclick="signOut();">Sign out</a>
-            <script>
-                function onSignIn(googleUser) {
-                    // $('#signin_button').attr('style', 'display: none'); // hide sign-in button
 
-                    var profile = googleUser.getBasicProfile();
-                    console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
-                    console.log('Name: ' + profile.getName());
-                    console.log('Image URL: ' + profile.getImageUrl());
-                    console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
-                }
+            <button id="signin_button">Google Signin</button>
+            <div id="result"></div>
+
+            <a href="#" onclick="signOut();">Sign out</a>
+            <!-- SCRIPT CONCERNING GOOGLE SIGN-IN -->
+            <!-- Code for sign-in button function adapted from code
+            provided by Udacity mentor Zeeshan A. in the Udacity Student Hub
+            (thread-11439638899-1138379) on July 31, 2019 -->
+            <!-- Code for sign-out link provided by Google at
+            https://developers.google.com/identity/sign-in/web/sign-in -->
+            <script>
+                $('#signin_button').click(function() {
+                    function signInCallback(authResult){
+                        if (authResult['code']){
+                            $('#signin_button').attr('style', 'display: none');
+                            $.ajax({
+                                type: 'POST',
+                                url: '/gconnect?state={{state}}',
+                                processData:false,
+                                data:authResult['code'],
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                contentType: 'application/octet-stream; charset=utf-8',
+                                success:function(result){
+                                    $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+                                         setTimeout(function() {
+                                          window.location.href = "/";
+                                         }, 4000); // redirect after 4 seconds
+                                }
+                            });
+                        } else{
+                          console.log('An error occurred: ' + authResult['error']);
+                          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                        }
+                    }
+
+                    auth2.grantOfflineAccess().then(signInCallback);
+                });
 
                 function signOut() {
                     var auth2 = gapi.auth2.getAuthInstance();
@@ -53,6 +93,7 @@
                     });
                 }
             </script>
+            <!-- END SCRIPT CONCERNING GOOGLE SIGN-IN -->
         </div>
     </div>
 </body>
