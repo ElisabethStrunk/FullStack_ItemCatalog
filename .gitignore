@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 .idea/
 item_catalog.db
+app/client_secrets.json

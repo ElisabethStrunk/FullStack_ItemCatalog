@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Elisabeth's Sports Item Catalog
+    </title>
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}"
+          type="image/x-icon">
+    <link type="text/css"
+          rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+          rel="stylesheet"
+          type="text/css">
+</head>
+<body>
+    <div id="header" class="header">
+        <h1>
+            <a href="{{url_for('index')}}">
+                Elisabeth's Sports Item Catalog
+            </a>
+        </h1>
+    </div>
+    <div class="herror">
+        Oops!
+    </div>
+    <div class="middle_block">
+        <br>
+        <h3>{{ error_code }}</h3>
+        {{ error_text }}
+        <br>
+        <br>
+        <a href="{{url_for('index')}}" method="get">
+                <button>Go to main page...</button>
+        </a>
+        <br>
+        <br>
+    </div>
+
+    <footer>
+        <p id="thank-you-note">
+            Huge thanks to the following gracious stock photo artists:
+        </p>
+        <a style="background-color:black; color:white; text-decoration:none;
+                  padding:4px 6px;
+                  font-family:-apple-system, BlinkMacSystemFont,
+                              &quot;San Francisco&quot;,
+                              &quot;Helvetica Neue&quot;, Helvetica, Ubuntu,
+                              Roboto, Noto, &quot;Segoe UI&quot;, Arial,
+                              sans-serif;
+                  font-size:12px; font-weight:bold; line-height:1.2;
+                  display:inline-block; border-radius:3px"
+           href="https://unsplash.com/@thisisramiro?utm_medium=referral&amp;
+                 utm_campaign=photographer-credit&amp;utm_content=creditBadge"
+           target="_blank" rel="noopener noreferrer"
+           title="Download free do whatever you want high-resolution photos
+                  from Ramiro Mendes">
+            <span style="display:inline-block;padding:2px 3px">
+                <svg xmlns="http://www.w3.org/2000/svg"
+                     style="height:12px; width:auto; position:relative;
+                     vertical-align:middle; top:-2px; fill:white"
+                     viewBox="0 0 32 32">
+                    <title>unsplash-logo</title>
+                    <path d="M10 9V0h12v9H10zm12 5h10v18H0V14h10v9h12v-9z">
+                    </path>
+                </svg>
+            </span>
+            <span style="display:inline-block; padding:2px 3px">
+                Ramiro Mendes
+            </span>
+        </a>
+    </footer>
+</body>
+</html>

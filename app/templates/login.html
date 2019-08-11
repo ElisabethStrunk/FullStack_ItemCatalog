@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        Elisabeth's Sports Item Catalog
+    </title>
+    <link rel="shortcut icon"
+          href="{{ url_for('static', filename='favicon.ico') }}"
+          type="image/x-icon">
+    <link type="text/css"
+          rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+          rel="stylesheet"
+          type="text/css">
+
+    <!-- PRE-REQUISITES FOR GOOGLE SIGN-IN -->
+    <!-- Code provided by Udacity mentor Zeeshan A. in the
+    Udacity Student Hub (thread-11439638899-1138379) as an
+    answer to a question concerning deprecated course material
+    on July 31, 2019 -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/client:platform.js?onload=start"
+            async defer></script>
+    <script>
+        function start() {
+            gapi.load('auth2', function() {
+                auth2 = gapi.auth2.init({
+                    client_id: '705536674302-69vll8pod29taqh1u0apft2ff6llcm3c.apps.googleusercontent.com'
+                });
+            });
+        }
+    </script>
+    <!-- END PRE-REQUISITES FOR GOOGLE SIGN-IN -->
+</head>
+<body>
+    <div id="header" class="header">
+        <h1>
+            <a href="{{url_for('index')}}">
+                Elisabeth's Sports Item Catalog
+            </a>
+        </h1>
+    </div>
+    <div>
+        <h2>Login</h2>
+        <div class="block">
+
+            <button id="signin_button">Google Signin</button>
+            <div id="result"></div>
+
+            <a href="#" onclick="signOut();">Sign out</a>
+            <!-- SCRIPT CONCERNING GOOGLE SIGN-IN -->
+            <!-- Code for sign-in button function adapted from code
+            provided by Udacity mentor Zeeshan A. in the Udacity Student Hub
+            (thread-11439638899-1138379) on July 31, 2019 -->
+            <!-- Code for sign-out link provided by Google at
+            https://developers.google.com/identity/sign-in/web/sign-in -->
+            <script>
+                $('#signin_button').click(function() {
+                    function signInCallback(authResult){
+                        if (authResult['code']){
+                            $('#signin_button').attr('style', 'display: none');
+                            $.ajax({
+                                type: 'POST',
+                                url: '/gconnect?state={{state}}',
+                                processData:false,
+                                data:authResult['code'],
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                contentType: 'application/octet-stream; charset=utf-8',
+                                success:function(result){
+                                    if (result.status == 'new_user') {
+                                        var username = result.content.username;
+                                        var picture = result.content.picture;
+                                        $('#result').html(`Login Successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;">`)
+                                        setTimeout(function() {
+                                            window.location.href = "/";
+                                        }, 4000); // redirect after 4 seconds
+                                    }
+                                    else if (result.status == 'old_user') {
+                                        $('#result').html('Login Successful!</br><h3 style = "text-align: center;">Current user is already connected.</h3></br>Redirecting...');
+                                        setTimeout(function() {
+                                            window.location.href = "/";
+                                        }, 4000); // redirect after 4 seconds
+                                    }
+                                }
+                            });
+                        } else{
+                          console.log('An error occurred: ' + authResult['error']);
+                          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                        }
+                    }
+
+                    auth2.grantOfflineAccess().then(signInCallback);
+                });
+
+                function signOut() {
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    auth2.signOut().then(function () {
+                        console.log('User signed out.');
+                    });
+                }
+            </script>
+            <!-- END SCRIPT CONCERNING GOOGLE SIGN-IN -->
+        </div>
+    </div>
+</body>
+</html>
