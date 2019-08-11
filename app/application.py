@@ -8,6 +8,7 @@ TODO: write description
 # General imports
 import os
 import datetime
+import sys
 
 # Security-related imports
 import random
@@ -32,6 +33,7 @@ from app.database.database_setup import Base, Categories, Items
 # Error handling-related imports
 from werkzeug.exceptions import HTTPException
 from flask import abort
+from sqlalchemy.exc import SQLAlchemyError
 
 
 __author__ = "Elisabeth M. Strunk"
@@ -48,18 +50,22 @@ __status__ = "Development"
   *  Open a connection to the database
   *  Define functions that handle the interaction with the database. 
 '''
-if not os.path.exists('item_catalog.db'):
-    from app.database.database_setup import create_database
-    from app.database.populate_database import populate_database
+try:
+    if not os.path.exists('item_catalog.db'):
+        from app.database.database_setup import create_database
+        from app.database.populate_database import populate_database
 
-    create_database()
-    populate_database()
+        create_database()
+        populate_database()
 
-engine = create_engine('sqlite:///item_catalog.db',
-                       connect_args={'check_same_thread': False})
-Base.metadata.bind = engine
-db_session = sessionmaker(bind=engine)
-session = db_session()
+    engine = create_engine('sqlite:///item_catalog.db',
+                           connect_args={'check_same_thread': False})
+    Base.metadata.bind = engine
+    db_session = sessionmaker(bind=engine)
+    session = db_session()
+except SQLAlchemyError as e:
+    sys.exit("While initializing the database, an error occurred: " + str(e))
+
 
 
 def get_categories_from_db():
@@ -106,6 +112,7 @@ def delete_item_from_db(item):
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(16)
+
 
 '''
 ## Endpoints with rendered frontend:
