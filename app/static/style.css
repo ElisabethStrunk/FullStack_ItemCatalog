@@ -69,6 +69,23 @@ h3 {
     font-weight: bold;
 }
 
+.herror {
+    font-family: "Montserrat:700", sans-serif;
+    font-size: 20vw;
+    font-weight: bold;
+    color: var(--color-aqua); /* fallback color */
+    text-align: center;
+    background: url(ramiro-mendes-2JMjC_jqbBk-unsplash.jpg) no-repeat;
+    background-size: cover;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.middle_block {
+    width: 50%;
+    margin: auto;
+}
+
 .aqua {
     color: var(--color-aqua);
 }
