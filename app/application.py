@@ -74,7 +74,7 @@ def get_items_from_db(category):
 
 
 def get_item_from_db(item_id):
-    return session.query(Items).filter_by(id=item_id).one()
+    return session.query(Items).filter_by(id=item_id).one_or_none()
 
 
 def edit_item_in_db(edited_item):
@@ -87,7 +87,7 @@ def add_item_to_db(item):
     session.add(item)
     session.commit()
     new_item = session.query(Items).filter_by(
-        last_modified=item.last_modified).one()
+        last_modified=item.last_modified).one_or_none()
     return new_item
 
 
