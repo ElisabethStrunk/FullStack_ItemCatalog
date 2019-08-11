@@ -29,6 +29,9 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database.database_setup import Base, Categories, Items
 
+# Error handling-related imports
+from werkzeug.exceptions import HTTPException
+
 
 __author__ = "Elisabeth M. Strunk"
 __version__ = 1.0
@@ -357,6 +360,21 @@ def gconnect():
              '-moz-border-radius: 50%;">' \
     # flash("You are now logged in as {}".format(login_session['username'])) TODO:make this work
     return output, 200
+
+
+'''
+## Error handling
+'''
+
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return render_template('error.html',
+                           error_text=str(e).replace(str(code), ''),
+                           error_code=code), code
 
 
 '''
