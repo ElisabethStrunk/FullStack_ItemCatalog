@@ -67,7 +67,6 @@ except SQLAlchemyError as e:
     sys.exit("While initializing the database, an error occurred: " + str(e))
 
 
-
 def get_categories_from_db():
     return session.query(Categories).all()
 
@@ -162,6 +161,8 @@ def item(category, item_id):
 
 @app.route('/catalog/<string:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     item = get_item_from_db(item_id)
     if request.method == 'GET':
         categories = get_categories_from_db()
@@ -184,6 +185,8 @@ def edit_item(item_id):
 
 @app.route('/catalog/<string:item_id>/delete', methods=['GET', 'POST'])
 def delete_item(item_id):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     item = get_item_from_db(item_id)
     if request.method == 'GET':
         return render_template('delete_item.html', item=item)
@@ -196,6 +199,8 @@ def delete_item(item_id):
 
 @app.route('/catalog/add', methods=['GET', 'POST'])
 def add_item():
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     if request.method == 'GET':
         categories = get_categories_from_db()
         return render_template('add_item.html', categories=categories)
@@ -282,7 +287,7 @@ APPLICATION_NAME = "Elisabeth's Sports Item Catalog"
 
 
 @app.route('/login')
-def show_login():
+def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))  # anti-forgery state token
     login_session['state'] = state
@@ -369,22 +374,15 @@ def gdisconnect():
     if access_token is None:
         return render_template('logout.html',
                                result='Current user not connected.')
-    print('In gdisconnect access token is %s', access_token)
-    print('User name is: ')
-    print(login_session['username'])
     url = 'https://accounts.google.com/o/oauth2/revoke?token=' \
           '{}'.format(login_session['access_token'])
-    h = httplib2.Http()
-    result = h.request(url, 'GET')[0]
-    print('result is ')
-    print(result)
+    result = httplib2.Http().request(url, 'GET')[0]
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
         del login_session['email']
         del login_session['picture']
-        flash('You have been successfully disconnected.')
         return render_template('logout.html',
                                result='You have been successfully '
                                       'disconnected.')
