@@ -292,10 +292,12 @@ def gconnect():
     # Validate state token
     if request.args.get('state') != login_session['state']:
         abort(401, description="Login failed. Invalid state parameter.")
+
     # Obtain authorization code
     code = request.data
+
+    # Upgrade the authorization code into a credentials object
     try:
-        # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
@@ -303,7 +305,7 @@ def gconnect():
         abort(401, description="Login failed. Failed to upgrade the "
                                "authorization code.")
 
-    # Check that the access token is valid.
+    # Check that the access token is valid
     access_token = credentials.access_token
     url = (
         f'https://www.googleapis.com/oauth2/v1/'
@@ -311,21 +313,22 @@ def gconnect():
     h = httplib2.Http()
     result = json.loads(h.request(url, 'GET')[1])
 
-    # If there was an error in the access token info, abort.
+    # If there was an error in the access token info, abort
     if result.get('error'):
         abort(500, description="Login failed. " + result.get('error'))
 
-    # Verify that the access token is used for the intended user.
+    # Verify that the access token is used for the intended user
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
         abort(401, description="Login failed. Token's user ID doesn't "
                                "match given user ID.")
 
-    # Verify that the access token is valid for this app.
+    # Verify that the access token is valid for this app
     if result['issued_to'] != CLIENT_ID:
         abort(401, description="Login failed. Token's client ID does not "
                                "match app's.")
 
+    # Check if current user is already signed in
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if (stored_access_token is not None) and (gplus_id == stored_gplus_id):
@@ -333,7 +336,7 @@ def gconnect():
         # -> return "old_user" so the frontend can show an appropriate message
         return jsonify({'status': 'old_user', 'content': ''}), 200
 
-    # Store the access token in the session for later use.
+    # Store the access token in the session for later use
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
@@ -341,9 +344,7 @@ def gconnect():
     userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
-
     data = answer.json()
-
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
