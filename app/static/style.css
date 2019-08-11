@@ -86,11 +86,7 @@ h3 {
     margin: auto;
 }
 
-.aqua {
-    color: var(--color-aqua);
-}
-
-.aqua:visited {
+.aqua, .aqua:link, .aqua:visited {
     color: var(--color-aqua);
 }
 
