@@ -69,11 +69,24 @@ h3 {
     font-weight: bold;
 }
 
-.aqua {
-    color: var(--color-aqua);
+.herror {
+    font-family: "Montserrat:700", sans-serif;
+    font-size: 20vw;
+    font-weight: bold;
+    color: var(--color-aqua); /* fallback color */
+    text-align: center;
+    background: url(ramiro-mendes-2JMjC_jqbBk-unsplash.jpg) no-repeat;
+    background-size: cover;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
-.aqua:visited {
+.middle_block {
+    width: 50%;
+    margin: auto;
+}
+
+.aqua, .aqua:link, .aqua:visited {
     color: var(--color-aqua);
 }
 
@@ -117,6 +130,7 @@ footer {
 
 /* unvisited link */
 a:link {
+    color: black;
     text-decoration:  none;
 }
 
