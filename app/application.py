@@ -31,6 +31,7 @@ from app.database.database_setup import Base, Categories, Items
 
 # Error handling-related imports
 from werkzeug.exceptions import HTTPException
+from flask import abort
 
 
 __author__ = "Elisabeth M. Strunk"
@@ -132,23 +133,24 @@ def category(category):
                                category=category, items=items,
                                number_of_items=number_of_items)
     else:
-        return jsonify({'message': "No category found with name "
-                                   "{}!".format(category)}), 404
+        abort(404, description="No category found with name "
+                               "'{}'.".format(category))
 
 
 @app.route('/catalog/<string:category>/<string:item_id>')
 def item(category, item_id):
+    if category not in [c.name for c in get_categories_from_db()]:
+        abort(404, description="No category found with name "
+                               "'{}'.".format(category))
     item = get_item_from_db(item_id)
     if item:
         if item.category != category:
-            return jsonify({'message': "The item you requested was not found "
-                                       "in category {}!".format(category)}), \
-                   404
+            abort(404, description="The item you requested was not found "
+                                   "in category {}.".format(category))
         else:
             return render_template('item.html', item=item)
     else:
-        return jsonify({'message': "No item found with id "
-                                   "{}!".format(item_id)}), 404
+        abort(404, description="No item found with id {}.".format(item_id))
 
 
 @app.route('/catalog/<string:item_id>/edit', methods=['GET', 'POST'])
@@ -170,7 +172,7 @@ def edit_item(item_id):
         return redirect(url_for('item', item_id=item_id,
                                 category=item.category))
     else:
-        return 405
+        abort(405)
 
 
 @app.route('/catalog/<string:item_id>/delete', methods=['GET', 'POST'])
@@ -182,7 +184,7 @@ def delete_item(item_id):
         delete_item_from_db(item)
         return redirect(url_for('category', category=item.category))
     else:
-        return 405
+        abort(405)
 
 
 @app.route('/catalog/add', methods=['GET', 'POST'])
@@ -205,7 +207,7 @@ def add_item():
         return redirect(url_for('item', item_id=new_item.id,
                                 category=new_item.category))
     else:
-        return 405
+        abort(405)
 
 
 '''
@@ -246,7 +248,7 @@ def category_json(category):
         return jsonify(Category=serialized_category)
     else:
         return jsonify({'message': "No category found with name "
-                                   "{}!".format(category)}), 404
+                                   "{}.".format(category)}), 404
 
 
 @app.route('/catalog/<string:category>/<string:item_id>.json')
@@ -255,13 +257,13 @@ def item_in_category_json(category, item_id):
     if item:
         if item.category != category:
             return jsonify({'message': "The item you requested was not found "
-                                       "in category {}!".format(category)}), \
+                                       "in category {}.".format(category)}), \
                    404
         else:
             return jsonify(Item=item.serialize)
     else:
         return jsonify({'message': "No item found with id "
-                                   "{}!".format(item_id)}), 404
+                                   "{}.".format(item_id)}), 404
 
 
 '''
@@ -289,7 +291,7 @@ def gconnect():
     """
     # Validate state token
     if request.args.get('state') != login_session['state']:
-        return jsonify({'message': "Invalid state parameter"}), 401
+        abort(401, description="Login failed. Invalid state parameter.")
     # Obtain authorization code
     code = request.data
     try:
@@ -298,8 +300,8 @@ def gconnect():
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
     except FlowExchangeError:
-        return jsonify(
-            {'message': "Failed to upgrade the authorization code."}), 401
+        abort(401, description="Login failed. Failed to upgrade the "
+                               "authorization code.")
 
     # Check that the access token is valid.
     access_token = credentials.access_token
@@ -311,19 +313,18 @@ def gconnect():
 
     # If there was an error in the access token info, abort.
     if result.get('error'):
-        return jsonify(
-            {'message': "{}".format(result.get('error'))}), 500
+        abort(500, description="Login failed. " + result.get('error'))
 
     # Verify that the access token is used for the intended user.
     gplus_id = credentials.id_token['sub']
     if result['user_id'] != gplus_id:
-        return jsonify(
-            {'message': "Token's user ID doesn't match given user ID."}), 401
+        abort(401, description="Login failed. Token's user ID doesn't "
+                               "match given user ID.")
 
     # Verify that the access token is valid for this app.
     if result['issued_to'] != CLIENT_ID:
-        return jsonify(
-            {'message': "Token's client ID does not match app's."}), 401
+        abort(401, description="Login failed. Token's client ID does not "
+                               "match app's.")
 
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
