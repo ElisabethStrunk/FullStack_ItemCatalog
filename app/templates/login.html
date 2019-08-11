@@ -46,16 +46,16 @@
         <h2>Login</h2>
         <div class="block">
 
-            <button id="signin_button">Google Signin</button>
+            <button id="signin_button">Sign in with Google</button>
             <div id="result"></div>
+            <a href="{{url_for('gdisconnect')}}">
+                <button>Sign out</button>
+            </a>
 
-            <a href="#" onclick="signOut();">Sign out</a>
             <!-- SCRIPT CONCERNING GOOGLE SIGN-IN -->
             <!-- Code for sign-in button function adapted from code
             provided by Udacity mentor Zeeshan A. in the Udacity Student Hub
             (thread-11439638899-1138379) on July 31, 2019 -->
-            <!-- Code for sign-out link provided by Google at
-            https://developers.google.com/identity/sign-in/web/sign-in -->
             <script>
                 $('#signin_button').click(function() {
                     function signInCallback(authResult){
@@ -74,13 +74,13 @@
                                     if (result.status == 'new_user') {
                                         var username = result.content.username;
                                         var picture = result.content.picture;
-                                        $('#result').html(`Login Successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;"></br>Redirecting to main page...`)
+                                        $('#result').html(`Login successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;"></br>Redirecting to main page...`)
                                         setTimeout(function() {
                                             window.location.href = "/";
                                         }, 4000); // redirect after 4 seconds
                                     }
                                     else if (result.status == 'old_user') {
-                                        $('#result').html('Login Successful!</br><h3 style = "text-align: center;">Current user is already connected.</h3></br>Redirecting to main page...');
+                                        $('#result').html('Login successful!</br><h3 style = "text-align: center;">Current user is already connected.</h3></br>Redirecting to main page...');
                                         setTimeout(function() {
                                             window.location.href = "/";
                                         }, 4000); // redirect after 4 seconds
@@ -95,13 +95,6 @@
 
                     auth2.grantOfflineAccess().then(signInCallback);
                 });
-
-                function signOut() {
-                    var auth2 = gapi.auth2.getAuthInstance();
-                    auth2.signOut().then(function () {
-                        console.log('User signed out.');
-                    });
-                }
             </script>
             <!-- END SCRIPT CONCERNING GOOGLE SIGN-IN -->
         </div>
