@@ -266,7 +266,7 @@ def item_in_category_json(category, item_id):
 '''
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Restaurant Menu App"
+APPLICATION_NAME = "Elisabeth's Sports Item Catalog"
 
 
 @app.route('/login')
@@ -325,8 +325,9 @@ def gconnect():
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if (stored_access_token is not None) and (gplus_id == stored_gplus_id):
-        return jsonify(
-            {'message': "Current user is already connected."}), 200
+        # user is already connected
+        # -> return "old_user" so the frontend can show an appropriate message
+        return jsonify({'status': 'old_user', 'content': ''}), 200
 
     # Store the access token in the session for later use.
     login_session['access_token'] = credentials.access_token
@@ -343,20 +344,11 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
-    # Assemble output message such, that a welcome text and the user's
-    # profile picture will be displayed on the page
-    output = '<h3 style = "text-align: center;">' \
-             f'Welcome, {login_session["username"]}!' \
-             '</h3>' \
-             f'<img src="{login_session["picture"]} " ' \
-             'align="middle" ' \
-             'style = "width: 150px; height: 150px; ' \
-             'display: block; margin-left: auto; margin-right: auto;' \
-             'border-radius: 50%;' \
-             '-webkit-border-radius: 50%; ' \
-             '-moz-border-radius: 50%;">' \
-    # flash("You are now logged in as {}".format(login_session['username'])) TODO:make this work
-    return output, 200
+    # return "new_user" together with the users name and profile picture path,
+    # so the frontend can show an appropriate message
+    return jsonify({'status': 'new_user',
+                    'content': {'username': login_session["username"],
+                                'picture': login_session["picture"]}}), 200
 
 
 '''
