@@ -33,6 +33,28 @@
         }
     </script>
     <!-- END PRE-REQUISITES FOR GOOGLE SIGN-IN -->
+    <!-- PRE-REQUISITES FOR FACEBOOK SIGN-IN -->
+    <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            appId      : '{your-app-id}',
+            cookie     : true,
+            xfbml      : true,
+            version    : '{api-version}'
+          });
+
+          FB.AppEvents.logPageView();
+
+        };
+        (function(d, s, id){
+           var js, fjs = d.getElementsByTagName(s)[0];
+           if (d.getElementById(id)) {return;}
+           js = d.createElement(s); js.id = id;
+           js.src = "https://connect.facebook.net/en_US/sdk.js";
+           fjs.parentNode.insertBefore(js, fjs);
+         }(document, 'script', 'facebook-jssdk'));
+    </script>
+    <!-- END PRE-REQUISITES FOR FACEBOOK SIGN-IN -->
 </head>
 <body>
     <div id="header" class="header">
@@ -51,53 +73,52 @@
             <a href="{{url_for('gdisconnect')}}">
                 <button>Sign out</button>
             </a>
-
-            <!-- SCRIPT CONCERNING GOOGLE SIGN-IN -->
-            <!-- Code for sign-in button function adapted from code
-            provided by Udacity mentor Zeeshan A. in the Udacity Student Hub
-            (thread-11439638899-1138379) on July 31, 2019 -->
-            <script>
-                $('#signin_button').click(function() {
-                    function signInCallback(authResult){
-                        if (authResult['code']){
-                            $('#signin_button').attr('style', 'display: none');
-                            $.ajax({
-                                type: 'POST',
-                                url: '/gconnect?state={{state}}',
-                                processData:false,
-                                data:authResult['code'],
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest'
-                                },
-                                contentType: 'application/octet-stream; charset=utf-8',
-                                success:function(result){
-                                    if (result.status == 'new_user') {
-                                        var username = result.content.username;
-                                        var picture = result.content.picture;
-                                        $('#result').html(`Login successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;"></br>Redirecting to main page...`)
-                                        setTimeout(function() {
-                                            window.location.href = "/";
-                                        }, 4000); // redirect after 4 seconds
-                                    }
-                                    else if (result.status == 'old_user') {
-                                        $('#result').html('Login successful!</br><h3 style = "text-align: center;">Current user is already connected.</h3></br>Redirecting to main page...');
-                                        setTimeout(function() {
-                                            window.location.href = "/";
-                                        }, 4000); // redirect after 4 seconds
-                                    }
-                                }
-                            });
-                        } else{
-                          console.log('An error occurred: ' + authResult['error']);
-                          $('#result').html('Failed to make a server-side call. Check your configuration and console.');
-                        }
-                    }
-
-                    auth2.grantOfflineAccess().then(signInCallback);
-                });
-            </script>
-            <!-- END SCRIPT CONCERNING GOOGLE SIGN-IN -->
         </div>
     </div>
+
+    <!-- SCRIPT CONCERNING GOOGLE SIGN-IN -->
+    <!-- Code for sign-in button function adapted from code
+    provided by Udacity mentor Zeeshan A. in the Udacity Student Hub
+    (thread-11439638899-1138379) on July 31, 2019 -->
+    <script>
+        $('#signin_button').click(function() {
+            function signInCallback(authResult){
+                if (authResult['code']){
+                    $('#signin_button').attr('style', 'display: none');
+                    $.ajax({
+                        type: 'POST',
+                        url: '/gconnect?state={{state}}',
+                        processData:false,
+                        data:authResult['code'],
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        contentType: 'application/octet-stream; charset=utf-8',
+                        success:function(result){
+                            if (result.status == 'new_user') {
+                                var username = result.content.username;
+                                var picture = result.content.picture;
+                                $('#result').html(`Login successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;"></br>Redirecting to main page...`)
+                                setTimeout(function() {
+                                    window.location.href = "/";
+                                }, 4000); // redirect after 4 seconds
+                            }
+                            else if (result.status == 'old_user') {
+                                $('#result').html('Login successful!</br><h3 style = "text-align: center;">Current user is already connected.</h3></br>Redirecting to main page...');
+                                setTimeout(function() {
+                                    window.location.href = "/";
+                                }, 4000); // redirect after 4 seconds
+                            }
+                        }
+                    });
+                } else{
+                  console.log('An error occurred: ' + authResult['error']);
+                  $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                }
+            }
+            auth2.grantOfflineAccess().then(signInCallback);
+        });
+    </script>
+    <!-- END SCRIPT CONCERNING GOOGLE SIGN-IN -->
 </body>
 </html>
