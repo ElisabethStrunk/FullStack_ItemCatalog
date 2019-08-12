@@ -64,17 +64,25 @@
             </a>
         </h1>
     </div>
-    <div>
+    <div id="login_body">
         <h2>Login</h2>
         <div class="block">
-
+            <!-- GOOGLE SIGN-IN -->
             <button id="signin_button">Sign in with Google</button>
-            <div id="result"></div>
             <a href="{{url_for('gdisconnect')}}">
                 <button>Sign out</button>
             </a>
+            <!-- FACEBOOK SIGN-IN -->
+            <button>
+                <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+                    <a href='javascript:sendTokenToServer()'>
+                        Sign in with Facebook
+                    </a>
+                </fb:login-button>
+            </button>
         </div>
     </div>
+    <div id="result"></div>
 
     <!-- SCRIPT CONCERNING GOOGLE SIGN-IN -->
     <!-- Code for sign-in button function adapted from code
@@ -84,7 +92,6 @@
         $('#signin_button').click(function() {
             function signInCallback(authResult){
                 if (authResult['code']){
-                    $('#signin_button').attr('style', 'display: none');
                     $.ajax({
                         type: 'POST',
                         url: '/gconnect?state={{state}}',
@@ -95,10 +102,11 @@
                         },
                         contentType: 'application/octet-stream; charset=utf-8',
                         success:function(result){
+                            $('#login_body').attr('style', 'display: none');
                             if (result.status == 'new_user') {
                                 var username = result.content.username;
                                 var picture = result.content.picture;
-                                $('#result').html(`Login successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;"></br>Redirecting to main page...`)
+                                $('#result').html(`Login successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;"></br>Redirecting to main page...`);
                                 setTimeout(function() {
                                     window.location.href = "/";
                                 }, 4000); // redirect after 4 seconds
@@ -109,6 +117,11 @@
                                     window.location.href = "/";
                                 }, 4000); // redirect after 4 seconds
                             }
+                        },
+                        error:function(jqXHR, exception){
+                            $('#header').attr('style', 'display: none');
+                            $('#login_body').attr('style', 'display: none');
+                            $('#result').html(jqXHR.responseText);
                         }
                     });
                 } else{
@@ -120,5 +133,71 @@
         });
     </script>
     <!-- END SCRIPT CONCERNING GOOGLE SIGN-IN -->
+
+    <!--FACEBOOK SIGN IN -->
+    <!-- Code for sign-in button function adapted from code
+    provided in Udacity's Full Stack Web Developer Nanodegree Program,
+    Part 4, Lesson 8-->
+    <script>
+        window.fbAsyncInit = function() {
+            FB.init({
+                appId      : '959341284405369',
+                cookie     : true,  // enable cookies to allow the server to access the session
+                xfbml      : true,  // parse social plugins on this page
+                version    : 'v2.8'
+            });
+        };
+
+        // Load the SDK asynchronously
+        (function(d, s, id) {
+            var js, fjs = d.getElementsByTagName(s)[0];
+            if (d.getElementById(id)) return;
+            js = d.createElement(s);
+            js.id = id;
+            js.src = "//connect.facebook.net/en_US/sdk.js";
+            fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+
+        // Here we run a very simple test of the Graph API after login is
+        // successful.  See statusChangeCallback() for when this call is made.
+        function sendTokenToServer() {
+            var access_token = FB.getAuthResponse()['accessToken'];
+            console.log(access_token);
+            console.log('Welcome!  Fetching your information.... ');
+            FB.api('/me', function(response) {
+                console.log('Successful login for: ' + response.name);
+                $.ajax({
+                    type: 'POST',
+                    url: '/fbconnect?state={{state}}',
+                    processData: false,
+                    data: access_token,
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success:function(result){
+                        $('#login_body').attr('style', 'display: none');
+                        if (result.status == 'new_user') {
+                            var username = result.content.username;
+                            var picture = result.content.picture;
+                            $('#result').html(`Login successful!</br><h3 style = "text-align: center;">Welcome, ${username}</h3><img src="${picture}" align="middle" style="width: 150px; height: 150px; display: block; margin-left: auto; margin-right: auto; border-radius: 50%; -webkit-border-radius: 50%; -moz-border-radius: 50%;"></br>Redirecting to main page...`);
+                            setTimeout(function() {
+                                window.location.href = "/";
+                            }, 4000); // redirect after 4 seconds
+                        }
+                        else if (result.status == 'old_user') {
+                            $('#result').html('Login successful!</br><h3 style = "text-align: center;">Current user is already connected.</h3></br>Redirecting to main page...');
+                            setTimeout(function() {
+                                window.location.href = "/";
+                            }, 4000); // redirect after 4 seconds
+                        }
+                    },
+                    error:function(jqXHR, exception){
+                        $('#header').attr('style', 'display: none');
+                        $('#login_body').attr('style', 'display: none');
+                        $('#result').html(jqXHR.responseText);
+                    }
+                });
+            });
+        };
+    </script>
+    <!--END FACEBOOK SIGN IN -->
 </body>
 </html>

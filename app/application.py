@@ -114,6 +114,25 @@ app.config['SECRET_KEY'] = os.urandom(16)
 
 
 '''
+## Error handling
+'''
+
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return render_template('error.html',
+                           error_text=str(e).replace(str(code), ''),
+                           error_code=code), code
+
+
+app.config['TRAP_HTTP_EXCEPTIONS'] = True
+app.register_error_handler(Exception, handle_error)
+
+
+'''
 ## Endpoints with rendered frontend:
 '''
 
@@ -390,19 +409,73 @@ def gdisconnect():
         abort(500, 'Failed to revoke token for given user.')
 
 
-'''
-## Error handling
-'''
+@app.route('/fbconnect', methods=['POST'])
+def fbconnect():
+    """
+        Code of this function adapted from the code provided by Udemy instructor
+        Lorenzo Brown at
+        https://github.com/udacity/ud330/blob/master/Lesson4/step2/project.py
+    """
+    # Validate state token
+    if request.args.get('state') != login_session['state']:
+        abort(401, description="Login failed. Invalid state parameter.")
 
+    # Obtain access token
+    access_token_byte = request.data
+    access_token = access_token_byte.decode("utf-8")
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return render_template('error.html',
-                           error_text=str(e).replace(str(code), ''),
-                           error_code=code), code
+    # Exchange client token for long-lived server-side token
+    app_id = json.loads(open('fb_client_secrets.json', 'r').
+                        read())['web']['app_id']
+    app_secret = json.loads(open('fb_client_secrets.json', 'r')
+                            .read())['web']['app_secret']
+    url = 'https://graph.facebook.com/oauth/access_token?' \
+          'grant_type=fb_exchange_token&' \
+          f'client_id={app_id}&' \
+          f'client_secret={app_secret}&' \
+          f'fb_exchange_token={access_token}'
+    result = httplib2.Http().request(url, 'GET')[1]
+    token = json.loads(result.decode("utf-8"))["access_token"]
+
+    # Store the access token in the session for later use
+    login_session['access_token'] = token
+
+    # Get user info
+    url = 'https://graph.facebook.com/v2.8/me?' \
+          f'access_token={token}&' \
+          'fields=name,id,email'
+    result = httplib2.Http().request(url, 'GET')[1]
+    user_info = json.loads(result.decode("utf-8"))
+
+    # Check if current user is already signed in
+    stored_access_token = login_session.get('access_token')
+    stored_fb_id = login_session.get('facebook_id')
+    if (stored_access_token is not None) and (user_info["id"] == stored_fb_id):
+        # user is already connected
+        # -> return "old_user" so the frontend can show an appropriate message
+        return jsonify({'status': 'old_user', 'content': ''}), 200
+
+    # Get user picture
+    url = 'https://graph.facebook.com/v2.8/me/picture?' \
+          f'access_token={token}&' \
+          'redirect=0&' \
+          'height=200&' \
+          'width=200'
+    result = httplib2.Http().request(url, 'GET')[1]
+    data = json.loads(result)
+
+    # Store user data
+    login_session['provider'] = 'facebook'
+    login_session['username'] = user_info["name"]
+    login_session['email'] = user_info["email"]
+    login_session['facebook_id'] = user_info["id"]
+    login_session['picture'] = data["data"]["url"]
+
+    # return "new_user" together with the users name and profile picture path,
+    # so the frontend can show an appropriate message
+    return jsonify({'status': 'new_user',
+                    'content': {'username': login_session["username"],
+                                'picture': login_session["picture"]}}), 200
 
 
 '''
