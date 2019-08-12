@@ -178,6 +178,15 @@ footer {
     color: #6d6d6d;
 }
 
+.signin_buttons {
+    display: table;
+}
+
+.wrapper {
+    display: table-cell;
+    vertical-align: middle;
+}
+
 /* unvisited link */
 a:link {
     color: black;

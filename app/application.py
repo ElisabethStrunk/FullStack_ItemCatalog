@@ -312,6 +312,12 @@ APPLICATION_NAME = "Elisabeth's Sports Item Catalog"
 
 @app.route('/login')
 def login():
+    if login_session.get('provider'):
+        # current user is already logged in
+        return render_template('login.html',
+                               user_found=True,
+                               user_name=login_session.get('username'),
+                               user_picture=login_session.get('picture'))
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))  # anti-forgery state token
     login_session['state'] = state
@@ -493,6 +499,7 @@ def gdisconnect():
           '{}'.format(login_session['access_token'])
     result = httplib2.Http().request(url, 'GET')[0]
     if result['status'] == '200':
+        del login_session['provider']
         del login_session['access_token']
         del login_session['gplus_id']
         del login_session['username']
@@ -516,6 +523,7 @@ def fbdisconnect():
     result = httplib2.Http().request(url, 'DELETE')[1]
     data = json.loads(result)
     if data['success'] is True:
+        del login_session['provider']
         del login_session['access_token']
         del login_session['facebook_id']
         del login_session['username']
