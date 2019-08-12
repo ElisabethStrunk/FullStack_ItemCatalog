@@ -305,6 +305,11 @@ CLIENT_ID = json.loads(
 APPLICATION_NAME = "Elisabeth's Sports Item Catalog"
 
 
+'''
+## Sign-in
+'''
+
+
 @app.route('/login')
 def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
@@ -376,6 +381,9 @@ def gconnect():
     params = {'access_token': credentials.access_token, 'alt': 'json'}
     answer = requests.get(userinfo_url, params=params)
     data = answer.json()
+
+    # Store user data
+    login_session['provider'] = 'google'
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -385,28 +393,6 @@ def gconnect():
     return jsonify({'status': 'new_user',
                     'content': {'username': login_session["username"],
                                 'picture': login_session["picture"]}}), 200
-
-
-@app.route('/gdisconnect')
-def gdisconnect():
-    access_token = login_session.get('access_token')
-    if access_token is None:
-        return render_template('logout.html',
-                               result='Current user not connected.')
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=' \
-          '{}'.format(login_session['access_token'])
-    result = httplib2.Http().request(url, 'GET')[0]
-    if result['status'] == '200':
-        del login_session['access_token']
-        del login_session['gplus_id']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
-        return render_template('logout.html',
-                               result='You have been successfully '
-                                      'disconnected.')
-    else:
-        abort(500, 'Failed to revoke token for given user.')
 
 
 @app.route('/fbconnect', methods=['POST'])
@@ -476,6 +462,70 @@ def fbconnect():
     return jsonify({'status': 'new_user',
                     'content': {'username': login_session["username"],
                                 'picture': login_session["picture"]}}), 200
+
+
+'''
+## Sign-out
+'''
+
+
+@app.route('/disconnect')
+def sign_out():
+    session_provider = login_session.get('provider')
+    if session_provider == 'google':
+        return gdisconnect()
+    elif session_provider == 'facebook':
+        return fbdisconnect()
+    elif session_provider is None:
+        return render_template('logout.html',
+                               result='Current user not connected.')
+    else:
+        abort(500, description="An error occurred during sign-out. "
+                               f"Session provider unknown.")
+
+
+def gdisconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        return render_template('logout.html',
+                               result='Current user not connected.')
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=' \
+          '{}'.format(login_session['access_token'])
+    result = httplib2.Http().request(url, 'GET')[0]
+    if result['status'] == '200':
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        return render_template('logout.html',
+                               result='You have been successfully '
+                                      'disconnected.')
+    else:
+        abort(500, 'Failed to revoke token for given user.')
+
+
+def fbdisconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        return render_template('logout.html',
+                               result='Current user not connected.')
+    facebook_id = login_session.get('facebook_id')
+    url = 'https://graph.facebook.com/{}/permissions?access_token=' \
+          '{}'.format(facebook_id, access_token)
+    result = httplib2.Http().request(url, 'DELETE')[1]
+    data = json.loads(result)
+    if data['success'] is True:
+        del login_session['access_token']
+        del login_session['facebook_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        return render_template('logout.html',
+                               result='You have been successfully '
+                                      'disconnected.')
+    else:
+        abort(500, 'Failed to revoke token for given user.')
 
 
 '''

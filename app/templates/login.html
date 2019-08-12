@@ -47,7 +47,7 @@
         <div class="block">
             <!-- GOOGLE SIGN-IN -->
             <button id="signin_button">Sign in with Google</button>
-            <a href="{{url_for('gdisconnect')}}">
+            <a href="{{url_for('sign_out')}}">
                 <button>Sign out</button>
             </a>
             <!-- FACEBOOK SIGN-IN -->
@@ -136,8 +136,6 @@
             fjs.parentNode.insertBefore(js, fjs);
         }(document, 'script', 'facebook-jssdk'));
 
-        // Here we run a very simple test of the Graph API after login is
-        // successful.  See statusChangeCallback() for when this call is made.
         function sendTokenToServer() {
             var access_token = FB.getAuthResponse()['accessToken'];
             console.log(access_token);
