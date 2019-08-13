@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """
-Item Catalog
+ELISABETH'S SPORTS ITEM CATALOG
 
-TODO: write description
+An application that provides a list of sports items within a variety of
+categories as well as provide a user registration and authentication system -
+implementing third-party OAuth authentication. Registered users have the
+ability to post, edit and delete items.
+Users can log in with their Google or Facebook account.
 """
 
 # General imports
@@ -21,7 +25,7 @@ from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 
 # Server application-related imports
 from flask import Flask, render_template, jsonify, request, redirect, \
-    url_for, flash
+    url_for
 
 # Database-related imports
 import requests
@@ -106,7 +110,8 @@ def delete_item_from_db(item):
 '''
 # WEB APPLICATION
   *  Initialize Flask application and set secret key for security
-  *  define all routes and their endpoint functions
+  *  Set up error handler
+  *  Define all routes and their endpoint functions
 '''
 
 app = Flask(__name__)
@@ -224,19 +229,21 @@ def add_item():
         categories = get_categories_from_db()
         return render_template('add_item.html', categories=categories)
     elif request.method == 'POST':
-        if request.form['name']:
+        if request.form['name'] and request.form['description'] and \
+                request.form['category']:
             item_name = request.form['name']
-        if request.form['description']:
             item_description = request.form['description']
-        if request.form['category']:
             item_category = request.form['category']
-        new_item = add_item_to_db(
-            Items(name=item_name,
-                  description=item_description,
-                  category=item_category,
-                  last_modified=datetime.datetime.now()))
-        return redirect(url_for('item', item_id=new_item.id,
-                                category=new_item.category))
+            new_item = add_item_to_db(
+                Items(name=item_name,
+                      description=item_description,
+                      category=item_category,
+                      last_modified=datetime.datetime.now()))
+            return redirect(url_for('item', item_id=new_item.id,
+                                    category=new_item.category))
+        else:
+            abort(400, description="The transmitted form data was incomplete. "
+                                   "Item not added.")
     else:
         abort(405)
 
@@ -299,12 +306,10 @@ def item_in_category_json(category, item_id):
 
 '''
 # AUTHENTICATION AND AUTHORIZATION
+  It is possible to sign in with either Google or Facebook.
+  *  Sign-in related endpoints and functions
+  *  Sign-out related endpoints and functions
 '''
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Elisabeth's Sports Item Catalog"
-
-
 '''
 ## Sign-in
 '''
@@ -325,9 +330,9 @@ def login():
 
 
 @app.route('/gconnect', methods=['POST'])
-def gconnect():
+def google_connect():
     """
-    Code of this function adapted from the code provided by Udemy instructor
+    Code of this function adapted from the code provided by Udacity instructor
     Lorenzo Brown at
     https://github.com/udacity/ud330/blob/master/Lesson2/step5/project.py
     """
@@ -366,7 +371,8 @@ def gconnect():
                                "match given user ID.")
 
     # Verify that the access token is valid for this app
-    if result['issued_to'] != CLIENT_ID:
+    if result['issued_to'] != json.loads(open('client_secrets.json',
+                                              'r').read())['web']['client_id']:
         abort(401, description="Login failed. Token's client ID does not "
                                "match app's.")
 
@@ -383,9 +389,9 @@ def gconnect():
     login_session['gplus_id'] = gplus_id
 
     # Get user info
-    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
-    answer = requests.get(userinfo_url, params=params)
+    answer = requests.get(user_info_url, params=params)
     data = answer.json()
 
     # Store user data
@@ -402,11 +408,11 @@ def gconnect():
 
 
 @app.route('/fbconnect', methods=['POST'])
-def fbconnect():
+def facebook_connect():
     """
-        Code of this function adapted from the code provided by Udemy instructor
-        Lorenzo Brown at
-        https://github.com/udacity/ud330/blob/master/Lesson4/step2/project.py
+    Code of this function adapted from the code provided by Udacity instructor
+    Lorenzo Brown at
+    https://github.com/udacity/ud330/blob/master/Lesson4/step2/project.py
     """
     # Validate state token
     if request.args.get('state') != login_session['state']:
@@ -488,9 +494,9 @@ def check_if_user_connected():
 def sign_out():
     session_provider = login_session.get('provider')
     if session_provider == 'google':
-        return gdisconnect()
+        return google_disconnect()
     elif session_provider == 'facebook':
-        return fbdisconnect()
+        return facebook_disconnect()
     elif session_provider is None:
         return render_template('logout.html',
                                result='Current user not connected.')
@@ -499,7 +505,7 @@ def sign_out():
                                f"Session provider unknown.")
 
 
-def gdisconnect():
+def google_disconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         return render_template('logout.html',
@@ -521,7 +527,7 @@ def gdisconnect():
         abort(500, 'Failed to revoke token for given user.')
 
 
-def fbdisconnect():
+def facebook_disconnect():
     access_token = login_session.get('access_token')
     if access_token is None:
         return render_template('logout.html',

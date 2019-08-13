@@ -1,7 +1,29 @@
+#!/usr/bin/env python3
+"""
+Database setup for Elisabeth's Sports Item Catalog
+
+SQLite database with two tables:
+    CATEGORIES
+    | name |
+    --------
+
+    ITEMS
+    | id | name | description | category | last_modified |
+    ------------------------------------------------------
+"""
+
 
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
+
+
+__author__ = "Elisabeth M. Strunk"
+__version__ = 1.0
+__maintainer__ = "Elisabeth M. Strunk"
+__email__ = "elisabeth.maria.strunk@gmail.com"
+__status__ = "Development"
+
 
 Base = declarative_base()
 
