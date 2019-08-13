@@ -470,6 +470,15 @@ def fbconnect():
                                 'picture': login_session["picture"]}}), 200
 
 
+@app.route('/is_user_connected')
+def check_if_user_connected():
+    if login_session.get('provider') is None:
+        return jsonify({'status': 'no_user_connected', 'content': ''})
+    return jsonify({'status': 'user_connected',
+                    'content': {'username': login_session.get("username"),
+                                'picture': login_session.get("picture")}}), 200
+
+
 '''
 ## Sign-out
 '''

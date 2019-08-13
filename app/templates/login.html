@@ -45,12 +45,12 @@
             </a>
         </h1>
     </div>
-    <h2>Login</h2>
 
     {% if user_found %}
     <script>
         $('#login_body').attr('style', 'display: none');
     </script>
+    <h2>Login</h2>
     <div class="block">
         You are already signed in as
         <br>
@@ -65,6 +65,7 @@
 
     {% else %}
     <div id="login_body">
+        <h2>Login</h2>
         <div class="block">
             You must be logged in to add, edit or delete items.
             <br>

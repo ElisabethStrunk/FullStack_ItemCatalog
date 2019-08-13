@@ -30,6 +30,19 @@ time {
     float: right;
 }
 
+#user_data {
+    font-family: 'Source Sans Pro', Arial, sans-serif;
+    font-size: 12px;
+    text-align: right;
+    display: inline;
+    letter-spacing: 1px;
+}
+
+#user_header {
+    float: right;
+    display: table;
+    margin: 0px 0px 12px 0px;
+}
 
 img {
     object-fit: cover;
