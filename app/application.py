@@ -49,10 +49,10 @@ __status__ = "Development"
 
 '''
 # CONNECTION TO THE DATABASE
-  *  If the database file does not exist yet, create the database and populate 
+  *  If the database file does not exist yet, create the database and populate
      it with dummy data.
   *  Open a connection to the database
-  *  Define functions that handle the interaction with the database. 
+  *  Define functions that handle the interaction with the database.
 '''
 try:
     if not os.path.exists('item_catalog.db'):

@@ -13,7 +13,8 @@ SQLite database with two tables:
 """
 
 
-from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, create_engine
+from sqlalchemy import Column, ForeignKey, Integer, String, DateTime, \
+    create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
