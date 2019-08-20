@@ -30,6 +30,19 @@ time {
     float: right;
 }
 
+#user_data {
+    font-family: 'Source Sans Pro', Arial, sans-serif;
+    font-size: 12px;
+    text-align: right;
+    display: inline;
+    letter-spacing: 1px;
+}
+
+#user_header {
+    float: right;
+    display: table;
+    margin: 0px 0px 12px 0px;
+}
 
 img {
     object-fit: cover;
@@ -126,6 +139,65 @@ footer {
 
 .inline {
     display: inline;
+}
+
+.abcRioButtonContents {
+    font-family: Roboto,arial,sans-serif;
+    font-weight: 500;
+    letter-spacing: .21px;
+    margin-left: 6px;
+    margin-right: 6px;
+    vertical-align: top;
+    font-size: 13px;
+    line-height: 21px;
+    color: #757575;
+}
+
+.abcRioButton {
+    -webkit-border-radius: 1px;
+    border-radius: 1px;
+    -webkit-box-shadow 0 2px 4px 0px rgba(0,0,0,.25): ;
+    box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: background-color .218s,border-color .218s,box-shadow .218s;
+    transition: background-color .218s,border-color .218s,box-shadow .218s;
+    -webkit-user-select: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    background-image: none;
+    color: #262626;
+    cursor: pointer;
+    outline: none;
+    overflow: hidden;
+    position: relative;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+
+    padding: 8px 3px 4px 8px;
+    height: 36px;
+    width: auto;
+    display: inline-block
+}
+
+.abcRioButton:hover {
+    outline: none;
+    box-shadow: 0 0 8px #7a95f1;
+}
+
+.abcRioButton:active {
+    background-color: #eee;
+    color: #6d6d6d;
+}
+
+.signin_buttons {
+    display: table;
+}
+
+.wrapper {
+    display: table-cell;
+    vertical-align: middle;
 }
 
 /* unvisited link */

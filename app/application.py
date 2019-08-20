@@ -1,8 +1,12 @@
 #!/usr/bin/env python3
 """
-Item Catalog
+ELISABETH'S SPORTS ITEM CATALOG
 
-TODO: write description
+An application that provides a list of sports items within a variety of
+categories as well as provide a user registration and authentication system -
+implementing third-party OAuth authentication. Registered users have the
+ability to post, edit and delete items.
+Users can log in with their Google or Facebook account.
 """
 
 # General imports
@@ -21,7 +25,7 @@ from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
 
 # Server application-related imports
 from flask import Flask, render_template, jsonify, request, redirect, \
-    url_for, flash
+    url_for
 
 # Database-related imports
 import requests
@@ -45,10 +49,10 @@ __status__ = "Development"
 
 '''
 # CONNECTION TO THE DATABASE
-  *  If the database file does not exist yet, create the database and populate 
+  *  If the database file does not exist yet, create the database and populate
      it with dummy data.
   *  Open a connection to the database
-  *  Define functions that handle the interaction with the database. 
+  *  Define functions that handle the interaction with the database.
 '''
 try:
     if not os.path.exists('item_catalog.db'):
@@ -65,7 +69,6 @@ try:
     session = db_session()
 except SQLAlchemyError as e:
     sys.exit("While initializing the database, an error occurred: " + str(e))
-
 
 
 def get_categories_from_db():
@@ -107,11 +110,31 @@ def delete_item_from_db(item):
 '''
 # WEB APPLICATION
   *  Initialize Flask application and set secret key for security
-  *  define all routes and their endpoint functions
+  *  Set up error handler
+  *  Define all routes and their endpoint functions
 '''
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(16)
+
+
+'''
+## Error handling
+'''
+
+
+@app.errorhandler(Exception)
+def handle_error(e):
+    code = 500
+    if isinstance(e, HTTPException):
+        code = e.code
+    return render_template('error.html',
+                           error_text=str(e).replace(str(code), ''),
+                           error_code=code), code
+
+
+app.config['TRAP_HTTP_EXCEPTIONS'] = True
+app.register_error_handler(Exception, handle_error)
 
 
 '''
@@ -162,6 +185,8 @@ def item(category, item_id):
 
 @app.route('/catalog/<string:item_id>/edit', methods=['GET', 'POST'])
 def edit_item(item_id):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     item = get_item_from_db(item_id)
     if request.method == 'GET':
         categories = get_categories_from_db()
@@ -184,6 +209,8 @@ def edit_item(item_id):
 
 @app.route('/catalog/<string:item_id>/delete', methods=['GET', 'POST'])
 def delete_item(item_id):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     item = get_item_from_db(item_id)
     if request.method == 'GET':
         return render_template('delete_item.html', item=item)
@@ -196,23 +223,27 @@ def delete_item(item_id):
 
 @app.route('/catalog/add', methods=['GET', 'POST'])
 def add_item():
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     if request.method == 'GET':
         categories = get_categories_from_db()
         return render_template('add_item.html', categories=categories)
     elif request.method == 'POST':
-        if request.form['name']:
+        if request.form['name'] and request.form['description'] and \
+                request.form['category']:
             item_name = request.form['name']
-        if request.form['description']:
             item_description = request.form['description']
-        if request.form['category']:
             item_category = request.form['category']
-        new_item = add_item_to_db(
-            Items(name=item_name,
-                  description=item_description,
-                  category=item_category,
-                  last_modified=datetime.datetime.now()))
-        return redirect(url_for('item', item_id=new_item.id,
-                                category=new_item.category))
+            new_item = add_item_to_db(
+                Items(name=item_name,
+                      description=item_description,
+                      category=item_category,
+                      last_modified=datetime.datetime.now()))
+            return redirect(url_for('item', item_id=new_item.id,
+                                    category=new_item.category))
+        else:
+            abort(400, description="The transmitted form data was incomplete. "
+                                   "Item not added.")
     else:
         abort(405)
 
@@ -275,14 +306,23 @@ def item_in_category_json(category, item_id):
 
 '''
 # AUTHENTICATION AND AUTHORIZATION
+  It is possible to sign in with either Google or Facebook.
+  *  Sign-in related endpoints and functions
+  *  Sign-out related endpoints and functions
 '''
-CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
-APPLICATION_NAME = "Elisabeth's Sports Item Catalog"
+'''
+## Sign-in
+'''
 
 
 @app.route('/login')
-def show_login():
+def login():
+    if login_session.get('provider'):
+        # current user is already logged in
+        return render_template('login.html',
+                               user_found=True,
+                               user_name=login_session.get('username'),
+                               user_picture=login_session.get('picture'))
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in range(32))  # anti-forgery state token
     login_session['state'] = state
@@ -290,9 +330,9 @@ def show_login():
 
 
 @app.route('/gconnect', methods=['POST'])
-def gconnect():
+def google_connect():
     """
-    Code of this function adapted from the code provided by Udemy instructor
+    Code of this function adapted from the code provided by Udacity instructor
     Lorenzo Brown at
     https://github.com/udacity/ud330/blob/master/Lesson2/step5/project.py
     """
@@ -331,7 +371,8 @@ def gconnect():
                                "match given user ID.")
 
     # Verify that the access token is valid for this app
-    if result['issued_to'] != CLIENT_ID:
+    if result['issued_to'] != json.loads(open('client_secrets.json',
+                                              'r').read())['web']['client_id']:
         abort(401, description="Login failed. Token's client ID does not "
                                "match app's.")
 
@@ -348,10 +389,13 @@ def gconnect():
     login_session['gplus_id'] = gplus_id
 
     # Get user info
-    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    user_info_url = "https://www.googleapis.com/oauth2/v1/userinfo"
     params = {'access_token': credentials.access_token, 'alt': 'json'}
-    answer = requests.get(userinfo_url, params=params)
+    answer = requests.get(user_info_url, params=params)
     data = answer.json()
+
+    # Store user data
+    login_session['provider'] = 'google'
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
@@ -363,19 +407,148 @@ def gconnect():
                                 'picture': login_session["picture"]}}), 200
 
 
+@app.route('/fbconnect', methods=['POST'])
+def facebook_connect():
+    """
+    Code of this function adapted from the code provided by Udacity instructor
+    Lorenzo Brown at
+    https://github.com/udacity/ud330/blob/master/Lesson4/step2/project.py
+    """
+    # Validate state token
+    if request.args.get('state') != login_session['state']:
+        abort(401, description="Login failed. Invalid state parameter.")
+
+    # Obtain access token
+    access_token_byte = request.data
+    access_token = access_token_byte.decode("utf-8")
+
+    # Exchange client token for long-lived server-side token
+    app_id = json.loads(open('fb_client_secrets.json', 'r').
+                        read())['web']['app_id']
+    app_secret = json.loads(open('fb_client_secrets.json', 'r')
+                            .read())['web']['app_secret']
+    url = 'https://graph.facebook.com/oauth/access_token?' \
+          'grant_type=fb_exchange_token&' \
+          f'client_id={app_id}&' \
+          f'client_secret={app_secret}&' \
+          f'fb_exchange_token={access_token}'
+    result = httplib2.Http().request(url, 'GET')[1]
+    token = json.loads(result.decode("utf-8"))["access_token"]
+
+    # Store the access token in the session for later use
+    login_session['access_token'] = token
+
+    # Get user info
+    url = 'https://graph.facebook.com/v2.8/me?' \
+          f'access_token={token}&' \
+          'fields=name,id,email'
+    result = httplib2.Http().request(url, 'GET')[1]
+    user_info = json.loads(result.decode("utf-8"))
+
+    # Check if current user is already signed in
+    stored_access_token = login_session.get('access_token')
+    stored_fb_id = login_session.get('facebook_id')
+    if (stored_access_token is not None) and (user_info["id"] == stored_fb_id):
+        # user is already connected
+        # -> return "old_user" so the frontend can show an appropriate message
+        return jsonify({'status': 'old_user', 'content': ''}), 200
+
+    # Get user picture
+    url = 'https://graph.facebook.com/v2.8/me/picture?' \
+          f'access_token={token}&' \
+          'redirect=0&' \
+          'height=200&' \
+          'width=200'
+    result = httplib2.Http().request(url, 'GET')[1]
+    data = json.loads(result)
+
+    # Store user data
+    login_session['provider'] = 'facebook'
+    login_session['username'] = user_info["name"]
+    login_session['email'] = user_info["email"]
+    login_session['facebook_id'] = user_info["id"]
+    login_session['picture'] = data["data"]["url"]
+
+    # return "new_user" together with the users name and profile picture path,
+    # so the frontend can show an appropriate message
+    return jsonify({'status': 'new_user',
+                    'content': {'username': login_session["username"],
+                                'picture': login_session["picture"]}}), 200
+
+
+@app.route('/is_user_connected')
+def check_if_user_connected():
+    if login_session.get('provider') is None:
+        return jsonify({'status': 'no_user_connected', 'content': ''})
+    return jsonify({'status': 'user_connected',
+                    'content': {'username': login_session.get("username"),
+                                'picture': login_session.get("picture")}}), 200
+
+
 '''
-## Error handling
+## Sign-out
 '''
 
 
-@app.errorhandler(Exception)
-def handle_error(e):
-    code = 500
-    if isinstance(e, HTTPException):
-        code = e.code
-    return render_template('error.html',
-                           error_text=str(e).replace(str(code), ''),
-                           error_code=code), code
+@app.route('/disconnect')
+def sign_out():
+    session_provider = login_session.get('provider')
+    if session_provider == 'google':
+        return google_disconnect()
+    elif session_provider == 'facebook':
+        return facebook_disconnect()
+    elif session_provider is None:
+        return render_template('logout.html',
+                               result='Current user not connected.')
+    else:
+        abort(500, description="An error occurred during sign-out. "
+                               f"Session provider unknown.")
+
+
+def google_disconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        return render_template('logout.html',
+                               result='Current user not connected.')
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=' \
+          '{}'.format(login_session['access_token'])
+    result = httplib2.Http().request(url, 'GET')[0]
+    if result['status'] == '200':
+        del login_session['provider']
+        del login_session['access_token']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        return render_template('logout.html',
+                               result='You have been successfully '
+                                      'disconnected.')
+    else:
+        abort(500, 'Failed to revoke token for given user.')
+
+
+def facebook_disconnect():
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        return render_template('logout.html',
+                               result='Current user not connected.')
+    facebook_id = login_session.get('facebook_id')
+    url = 'https://graph.facebook.com/{}/permissions?access_token=' \
+          '{}'.format(facebook_id, access_token)
+    result = httplib2.Http().request(url, 'DELETE')[1]
+    data = json.loads(result)
+    if data['success'] is True:
+        del login_session['provider']
+        del login_session['access_token']
+        del login_session['facebook_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        return render_template('logout.html',
+                               result='You have been successfully '
+                                      'disconnected.')
+    else:
+        abort(500, 'Failed to revoke token for given user.')
 
 
 '''
