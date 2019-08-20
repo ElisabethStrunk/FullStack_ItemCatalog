@@ -200,6 +200,27 @@ footer {
     vertical-align: middle;
 }
 
+.user_img_big {
+    width: 150px;
+    height: 150px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+}
+
+.user_img_small {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    padding: 0px 8px 3px 8px;
+    vertical-align: middle;
+}
+
 /* unvisited link */
 a:link {
     color: black;

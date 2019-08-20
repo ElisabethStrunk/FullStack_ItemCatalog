@@ -32,14 +32,7 @@
                     var picture = result.content.picture;
                     $('#user_data').html(`Signed in as
                         <span style = "font-weight: bold;">${username}</span>
-                        <img src="${picture}"
-                             style="width: 25px;
-                                    height: 25px;
-                                    border-radius: 50%;
-                                    -webkit-border-radius: 50%;
-                                    -moz-border-radius: 50%;
-                                    padding: 0px 8px 3px 8px;
-                                    vertical-align: middle;">`);
+                        <img src="${picture}" class="user_img_small">`);
                     $('#sign_out_button').attr('style', 'display: inline');
                 }
                 else if (result.status == 'no_user_connected') {
