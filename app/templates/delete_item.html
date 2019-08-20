@@ -1,44 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>
-        Elisabeth's Sports Item Catalog | Delete item
-    </title>
-    <link rel="shortcut icon"
-          href="{{ url_for('static', filename='favicon.ico') }}"
-          type="image/x-icon">
-    <link type="text/css"
-          rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
-          rel="stylesheet"
-          type="text/css">
+  <meta charset="UTF-8">
+  <title>
+    Elisabeth's Sports Item Catalog | Delete item
+  </title>
+  <link rel="shortcut icon"
+        href="{{ url_for('static', filename='favicon.ico') }}"
+        type="image/x-icon">
+  <link type="text/css"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+        rel="stylesheet"
+        type="text/css">
 </head>
 <body>
-    <div id="header" class="header">
-        <h1>
-            <a href="{{url_for('index')}}">
-                Elisabeth's Sports Item Catalog
-            </a>
-        </h1>
-    </div>
-    <div>
-        <h2>Delete Item</h2>
-        <div class="block">
-            Are you sure you want to delete?
-            <br>
-            <br>
-            <form action="{{url_for('delete_item', item_id=item.id)}}"
-                  method="post" class="inline">
-                <input type="submit" value="Delete" class="submit_button">
-            </form>
-             |
-            <a href="{{url_for('item', item_id=item.id,
-                  category=item.category)}}" method="get">
-                <button>Cancel</button>
-            </a>
-        </div>
-    </div>
+<div id="header" class="header">
+  <h1>
+    <a href="{{url_for('index')}}">
+      Elisabeth's Sports Item Catalog
+    </a>
+  </h1>
+</div>
+<div>
+  <h2>Delete Item</h2>
+  <div class="block">
+    Are you sure you want to delete?
+    <br>
+    <br>
+    <form action="{{url_for('delete_item', item_id=item.id)}}" method="post" class="inline">
+      <input type="submit" value="Delete" class="submit_button">
+    </form>
+    |
+    <a href="{{url_for('item', item_id=item.id, category=item.category)}}" method="get">
+      <button>Cancel</button>
+    </a>
+  </div>
+</div>
 </body>
 </html>
