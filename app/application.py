@@ -29,6 +29,7 @@ from flask import Flask, render_template, jsonify, request, redirect, \
 
 # Database-related imports
 import requests
+import bleach
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
@@ -194,11 +195,11 @@ def edit_item(item_id):
                                item=item)
     elif request.method == 'POST':
         if request.form['name']:
-            item.name = request.form['name']
+            item.name = bleach.clean(request.form['name'])
         if request.form['description']:
-            item.description = request.form['description']
+            item.description = bleach.clean(request.form['description'])
         if request.form['category']:
-            item.category = request.form['category']
+            item.category = bleach.clean(request.form['category'])
         item.last_modified = datetime.datetime.now()
         edit_item_in_db(item)
         return redirect(url_for('item', item_id=item_id,
@@ -231,9 +232,9 @@ def add_item():
     elif request.method == 'POST':
         if request.form['name'] and request.form['description'] and \
                 request.form['category']:
-            item_name = request.form['name']
-            item_description = request.form['description']
-            item_category = request.form['category']
+            item_name = bleach.clean(request.form['name'])
+            item_description = bleach.clean(request.form['description'])
+            item_category = bleach.clean(request.form['category'])
             new_item = add_item_to_db(
                 Items(name=item_name,
                       description=item_description,
