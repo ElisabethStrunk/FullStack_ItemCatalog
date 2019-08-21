@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>
-        Elisabeth's Sports Item Catalog | {{ item.name }}
-    </title>
-    <link rel="shortcut icon"
-          href="{{ url_for('static', filename='favicon.ico') }}"
-          type="image/x-icon">
-    <link type="text/css"
-          rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
-    <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
-          rel="stylesheet"
-          type="text/css">
+  <meta charset="UTF-8">
+  <title>
+    Elisabeth's Sports Item Catalog | {{ item.name }}
+  </title>
+  <link rel="shortcut icon"
+        href="{{ url_for('static', filename='favicon.ico') }}"
+        type="image/x-icon">
+  <link type="text/css"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+        rel="stylesheet"
+        type="text/css">
 </head>
 <body>
-    <div id="header" class="header">
-        <h1>
-            <a href="{{url_for('index')}}">
-                Elisabeth's Sports Item Catalog
-            </a>
-        </h1>
+<div id="header" class="header">
+  <h1>
+    <a href="{{url_for('index')}}">
+      Elisabeth's Sports Item Catalog
+    </a>
+  </h1>
+</div>
+<div>
+  <h2>{{item.name}}</h2>
+  <div class="block">
+    <div>{{item.description}}</div>
+    <br>
+    <div class="button_lineup">
+      <a href="{{url_for('edit_item', item_id=item.id)}}"
+         method="get">
+        <button>Edit</button>
+      </a> |
+      <a href="{{url_for('delete_item', item_id=item.id)}}" method="get">
+        <button>Delete</button>
+      </a>
     </div>
-    <div>
-        <h2>{{item.name}}</h2>
-        <div class="block">
-            <div>{{item.description}}</div>
-            <br>
-            <div class="button_lineup">
-                <a href="{{url_for('edit_item', item_id=item.id)}}"
-                   method="get">
-                    <button>Edit</button>
-                </a>  |
-                <a href="{{url_for('delete_item', item_id=item.id)}}"
-                   method="get">
-                    <button>Delete</button>
-                </a>
-            </div>
-        </div>
-    </div>
+  </div>
+</div>
 </body>
 </html>

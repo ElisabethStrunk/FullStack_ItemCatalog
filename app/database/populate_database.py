@@ -12,7 +12,7 @@ import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from app.database.database_setup import Base, Categories, Items
+from .database_setup import Base, Categories, Items
 
 
 __author__ = "Elisabeth M. Strunk"

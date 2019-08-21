@@ -32,7 +32,7 @@ import requests
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
-from app.database.database_setup import Base, Categories, Items
+from database.database_setup import Base, Categories, Items
 
 # Error handling-related imports
 from werkzeug.exceptions import HTTPException
@@ -56,8 +56,8 @@ __status__ = "Development"
 '''
 try:
     if not os.path.exists('item_catalog.db'):
-        from app.database.database_setup import create_database
-        from app.database.populate_database import populate_database
+        from database.database_setup import create_database
+        from database.populate_database import populate_database
 
         create_database()
         populate_database()
