@@ -33,26 +33,26 @@ For the Google and Facebook sign-in an OAuth 2.0 mechanism is used. You need to 
    Go to https://console.developers.google.com and sign in.<br>
    Create a new project.<br>
    Make sure that your project is selected:<br>
-   <img src="readme_images/image2019-8-21_21-36-5.png" width=350 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_21-36-5.png" width=350></kbd>
    
    Go to _Navigation Menu → APIs & Services → Credentials_:<br>
-   <img src="readme_images/image2019-8-11_20-16-56.png" width=305 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-11_20-16-56.png" width=305></kbd>
    
    Create an OAuth client ID:<br>
-   <img src="readme_images/image2019-8-11_20-19-10.png" width=431 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-11_20-19-10.png" width=431></kbd>
    
    Edit the OAuth consent screen:<br>
-   <img src="readme_images/image2019-8-21_21-38-4.png" width=550 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_21-38-4.png" width=550></kbd>
 
    → Change the application name to _Elisabeth's Sports Item Catalog_<br>
    → Customize the consent screen as you see fit<br>
    → then save the changes<br>
    
    Select _Web Application_:<br>
-   <img src="readme_images/image2019-8-11_20-28-18.png" width=150 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-11_20-28-18.png" width=150></kbd>
    
    Fill in the Authorized origins and redirect URIs as shown in the picture below:<br>
-   <img src="readme_images/image2019-8-11_20-31-52.png" width=430 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-11_20-31-52.png" width=430></kbd>
 
    → don't forget to press ENTER after typing in an URI, otherwise it will not be added<br>
    → then save the changes<br>
@@ -62,7 +62,7 @@ For the Google and Facebook sign-in an OAuth 2.0 mechanism is used. You need to 
 2. Insert your credentials into the code
 
    Download the credentials as JSON file:<br>
-   <img src="readme_images/image2019-8-21_21-53-29.png" width=750 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_21-53-29.png" width=750></kbd>
    
    Rename the JSON file to *client_secrets.json* and save it in the same directory as *application.py*.<br>
    Open the JSON file to see the client ID and the client secret (among other key-value pairs); for the following, you can copy-paste those values.<br>
@@ -78,22 +78,22 @@ More information about OAuth 2.0 with Google can be found [here](https://develop
 
    Go to https://developers.facebook.com/ and sign in.<br>
    Create a new application by going to _My Apps → Create App_:<br>
-   <img src="readme_images/image2019-8-21_22-15-33.png" width=265 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_22-15-33.png" width=265></kbd>
    
    Give your new app the Display Name _Elisabeth's Sports Item Catalog_ and click _Create App ID_.<br>
    Create a test app from your new application:<br>
-   <img src="readme_images/image2019-8-21_22-24-40.png" width=260 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_22-24-40.png" width=260></kbd>
    
    Under the section _Add a Product_ find _Facebook Login_ and click _Set up_:<br>
-   <img src="readme_images/image2019-8-21_22-26-5.png" width=247 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_22-26-5.png" width=247></kbd>
    
    Choose _Web_ as the app's platform:<br>
-   <img src="readme_images/image2019-8-21_22-27-28.png" width=550 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_22-27-28.png" width=550></kbd>
    
    In the settings, specify the Site URL:    http://localhost:5000
    
    Then go to _Settings → Basic_:<br>
-   <img src="readme_images/image2019-8-21_22-33-59.png" width=250 style="padding: 1px; border: 1px solid #021a40;">
+   <kbd><img src="readme_images/image2019-8-21_22-33-59.png" width=250></kbd>
    
    Change the Display Name to _Elisabeth's Sports Item Catalog_.<br> 
    At the top of the basic settings, find the _App ID_ and the _App Secret_.
