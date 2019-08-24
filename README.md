@@ -1,6 +1,6 @@
 # Udacity Full Stack Item Catalog
 
-Item catalog project of the Udacity Full Stack Web Developer Nanodegree Program.<br>
+Item catalog project of the [Udacity Full Stack Web Developer Nanodegree Program](https://www.udacity.com/course/full-stack-web-developer-nanodegree--nd004).<br>
 A full stack web application that provides a list of sports items within a variety of categories. The items are managed in a SQLite database. The application also provides a user authentication system utilizing Google sign-in as well as Facebook sign-in. Signed-in users can add, edit and delete items.
 
 ## __Getting Started__
@@ -43,7 +43,6 @@ For the Google and Facebook sign-in an OAuth 2.0 mechanism is used. You need to 
    
    Edit the OAuth consent screen:<br>
    <img src="readme_images/image2019-8-21_21-38-4.png" width=550>
-      
    → Change the application name to _Elisabeth's Sports Item Catalog_<br>
    → Customize the consent screen as you see fit<br>
    → then save the changes<br>
@@ -53,7 +52,7 @@ For the Google and Facebook sign-in an OAuth 2.0 mechanism is used. You need to 
    
    Fill in the Authorized origins and redirect URIs as shown in the picture below:<br>
    <img src="readme_images/image2019-8-11_20-31-52.png" width=430>
-   
+
    → don't forget to press ENTER after typing in an URI, otherwise it will not be added<br>
    → then save the changes<br>
    
