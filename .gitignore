@@ -106,3 +106,4 @@ venv.bak/
 item_catalog.db
 app/client_secrets.json
 app/fb_client_secrets.json
+app/old_credentials/

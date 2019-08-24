@@ -1,7 +1,0 @@
-pip install "httplib2==0.13.1"
-pip install "Flask==1.1.1"
-pip install "oauth2client==4.1.3"
-# install pipenv to propperly install requests
-pip install "pipenv==2018.11.26"
-pipenv install "requests==2.22.0"
-pip install "SQLAlchemy==1.3.6"
