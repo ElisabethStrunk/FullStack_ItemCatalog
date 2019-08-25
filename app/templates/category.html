@@ -14,35 +14,84 @@
   <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
         rel="stylesheet"
         type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 </head>
 <body>
-<div id="header" class="header">
-  <h1>
-    <a href="{{url_for('index')}}">
-      Elisabeth's Sports Item Catalog
+<script>
+        $.ajax({
+            type: 'GET',
+            url: '/is_user_connected',
+            processData:false,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success:function(result){
+                if (result.status == 'user_connected') {
+                    console.log('User connected!');
+                    var username = result.content.username;
+                    var picture = result.content.picture;
+                    $('#user_data').html(`Signed in as
+                        <span style = "font-weight: bold;">${username}</span>
+                        <img src="${picture}" class="user_img_small">`);
+                    $('#sign_out_button').attr('style', 'display: inline');
+                }
+                else if (result.status == 'no_user_connected') {
+                    console.log('No user connected!');
+                    $('#sign_in_button').attr('style', 'display: inline');
+                }
+            },
+            error:function(jqXHR, exception){
+                $('#site_content').attr('style', 'display: none');
+                $('#error_placeholder').html(jqXHR.responseText);
+            }
+        });
+</script>
+
+<div id="user_header" class="wrapper">
+  <div id="user_data"></div>
+  <div id="sign_out_button" style="display: none;">
+    <a href="{{url_for('sign_out')}}">
+      <button>Sign out</button>
     </a>
-  </h1>
-</div>
-<div>
-  <h2>Categories</h2>
-  <div class="block">
-    {% for c in categories %}
-    <a href="{{url_for('category', category=c.name)}}" method="get">
-      {{c.name}}
+  </div>
+  <div id="sign_in_button" style="display: none;">
+    <a href="{{url_for('login')}}">
+      <button>Sign in</button>
     </a>
-    <br>
-    {% endfor %}
   </div>
 </div>
-<div>
-  <h2>{{category}} Items ({{number_of_items}} items)</h2>
-  <div class="block">
-    {% for i in items %}
-    <a href="{{url_for('item', item_id=i.id, category=i.category)}}" method="get">
-      {{i.name}}
+
+<div id="error_placeholder"></div>
+
+<div id="site_content">
+  <div id="header" class="header">
+    <h1>
+      <a href="{{url_for('index')}}">
+        Elisabeth's Sports Item Catalog
+      </a>
+    </h1>
+  </div>
+  <div>
+    <h2>Categories</h2>
+    <div class="block">
+      {% for c in categories %}
+      <a href="{{url_for('category', category=c.name)}}" method="get">
+        {{c.name}}
+      </a>
       <br>
-    </a>
-    {% endfor %}
+      {% endfor %}
+    </div>
+  </div>
+  <div>
+    <h2>{{category}} Items ({{number_of_items}} items)</h2>
+    <div class="block">
+      {% for i in items %}
+      <a href="{{url_for('item', item_id=i.id, category=i.category)}}" method="get">
+        {{i.name}}
+        <br>
+      </a>
+      {% endfor %}
+    </div>
   </div>
 </div>
 </body>
