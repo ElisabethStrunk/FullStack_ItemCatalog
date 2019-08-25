@@ -2,11 +2,12 @@
 """
 ELISABETH'S SPORTS ITEM CATALOG
 
-An application that provides a list of sports items within a variety of
-categories as well as provide a user registration and authentication system -
-implementing third-party OAuth authentication. Registered users have the
-ability to post, edit and delete items.
-Users can log in with their Google or Facebook account.
+Item catalog project of the Udacity Full Stack Web Developer Nanodegree
+Program. A full stack web application that provides a list of sports items
+within a variety of categories. The items are managed in a SQLite database.
+The application also provides a user authentication system utilizing Google
+sign-in as well as Facebook sign-in. Signed-in users can add, edit and
+delete items.
 """
 
 # General imports
