@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>
+    Elisabeth's Sports Item Catalog
+  </title>
+  <link rel="shortcut icon"
+        href="{{ url_for('static', filename='favicon.ico') }}"
+        type="image/x-icon">
+  <link type="text/css"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+        rel="stylesheet"
+        type="text/css">
+  <link href="https://fonts.googleapis.com/css?family=Roboto"
+        rel="stylesheet"
+        type="text/css">
+
+  <!-- PRE-REQUISITES FOR GOOGLE SIGN-IN -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+  <script>
+    function start() {
+      gapi.load('auth2', function() {
+        auth2 = gapi.auth2.init({
+          client_id: 'INSERT YOUR CLIENT ID HERE.apps.googleusercontent.com'
+        });
+      });
+    }
+  </script>
+  <!-- END PRE-REQUISITES FOR GOOGLE SIGN-IN -->
+</head>
+<body>
+<div id="header" class="header">
+  <h1>
+    <a href="{{url_for('index')}}">
+      Elisabeth's Sports Item Catalog
+    </a>
+  </h1>
+</div>
+
+{% if user_found %}
+<script>
+    $('#login_body').attr('style', 'display: none');
+</script>
+<h2>Login</h2>
+<div class="block">
+  You are already signed in as
+  <br>
+  <h3 style="text-align: center;">
+    {{ user_name }}
+  </h3>
+  <img src="{{user_picture}}" align="middle"
+       style="width: 150px;
+              height: 150px;
+              display: block;
+              margin-left: auto;
+              margin-right: auto;
+              border-radius: 50%;
+              -webkit-border-radius: 50%;
+              -moz-border-radius: 50%;">
+  <a href="{{url_for('sign_out')}}">
+    <button>Sign out</button>
+  </a>
+</div>
+
+{% else %}
+<div id="login_body">
+  <h2>Login</h2>
+  <div class="block">
+    You must be logged in to add, edit or delete items.
+    <br>
+    <br>
+    <div class="signin_buttons">
+      <!-- BUTTON FOR GOOGLE SIGN-IN -->
+      <div id="google_login_button" class="abcRioButton">
+        <svg version="1.1"
+             xmlns="http://www.w3.org/2000/svg"
+             width="18px" height="18px"
+             viewBox="0 0 48 48"
+             class="abcRioButtonSvg">
+          <g>
+            <path fill="#EA4335"
+                  d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56
+                     13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"></path>
+            <path fill="#4285F4"
+                  d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73
+                     6c4.51-4.18 7.09-10.36 7.09-17.65z"></path>
+            <path fill="#FBBC05"
+                  d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0
+                     3.88.92 7.54 2.56 10.78l7.97-6.19z"></path>
+            <path fill="#34A853"
+                  d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26
+                     0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"></path>
+            <path fill="none" d="M0 0h48v48H0z"></path>
+          </g>
+        </svg>
+        <span class="abcRioButtonContents">
+          Sign in with Google
+        </span>
+      </div>
+      <span style="padding: 0px 8px;">|</span>
+
+      <!-- BUTTON FOR FACEBOOK SIGN-IN -->
+      <div class="wrapper">
+        <fb:login-button data-size="large" scope="public_profile,email" onlogin="sendTokenToServer();">
+          Sign in with Facebook
+        </fb:login-button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="result"></div>
+
+<!-- SCRIPT CONCERNING GOOGLE SIGN-IN -->
+<script>
+  $('#google_login_button').click(function() {
+    function signInCallback(authResult){
+      if (authResult['code']){
+        $.ajax({
+          type: 'POST',
+          url: '/gconnect?state={{state}}',
+          processData:false,
+          data:authResult['code'],
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest'
+          },
+          contentType: 'application/octet-stream; charset=utf-8',
+          success:function(result){
+            $('#login_body').attr('style', 'display: none');
+            if (result.status == 'new_user') {
+              var username = result.content.username;
+              var picture = result.content.picture;
+              var message = `Login successful!</br>` +
+                            `<h3 style = "text-align: center;">Welcome, ${username}</h3>` +
+                            `<img src="${picture}" align="middle" class="user_img_big">` +
+                            `</br>Redirecting to main page...`
+              $('#result').html(message);
+              setTimeout(function() {
+                window.location.href = "/";
+              }, 4000); // redirect after 4 seconds
+            }
+            else if (result.status == 'old_user') {
+              var message = 'Login successful!</br>' +
+                            '<h3 style = "text-align: center;">Current user is already connected.</h3>' +
+                            '</br>Redirecting to main page...'
+              $('#result').html(message);
+              setTimeout(function() {
+                window.location.href = "/";
+              }, 4000); // redirect after 4 seconds
+            }
+          },
+          error:function(jqXHR, exception){
+            $('#header').attr('style', 'display: none');
+            $('#login_body').attr('style', 'display: none');
+            $('#result').html(jqXHR.responseText);
+          }
+        });
+      } else{
+        console.log('An error occurred: ' + authResult['error']);
+        $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+      }
+    }
+    auth2.grantOfflineAccess().then(signInCallback);
+  });
+</script>
+<!-- END SCRIPT CONCERNING GOOGLE SIGN-IN -->
+
+<!--FACEBOOK SIGN IN -->
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : 'INSERT YOUR APP ID HERE',
+      cookie     : true,  // enable cookies to allow the server to access the session
+      xfbml      : true,  // parse social plugins on this page
+      version    : 'v2.8'
+    });
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s);
+    js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  function sendTokenToServer() {
+    var access_token = FB.getAuthResponse()['accessToken'];
+    FB.api('/me', function(response) {
+      $.ajax({
+        type: 'POST',
+        url: '/fbconnect?state={{state}}',
+        processData: false,
+        data: access_token,
+        contentType: 'application/octet-stream; charset=utf-8',
+        success:function(result){
+          $('#login_body').attr('style', 'display: none');
+          if (result.status == 'new_user') {
+            var username = result.content.username;
+            var picture = result.content.picture;
+            var message = `Login successful!</br>` +
+                          `<h3 style = "text-align: center;">Welcome, ${username}</h3>` +
+                          `<img src="${picture}" align="middle" class="user_img_big">` +
+                          `</br>Redirecting to main page...`
+            $('#result').html(message);
+            setTimeout(function() {
+              window.location.href = "/";
+            }, 4000); // redirect after 4 seconds
+          }
+          else if (result.status == 'old_user') {
+            var message = 'Login successful!</br>' +
+                          '<h3 style = "text-align: center;">Current user is already connected.</h3>' +
+                          '</br>Redirecting to main page...'
+            $('#result').html(message);
+            setTimeout(function() {
+              window.location.href = "/";
+            }, 4000); // redirect after 4 seconds
+          }
+        },
+        error:function(jqXHR, exception){
+          $('#header').attr('style', 'display: none');
+          $('#login_body').attr('style', 'display: none');
+          $('#result').html(jqXHR.responseText);
+        }
+      });
+    });
+  };
+
+</script>
+<!--END FACEBOOK SIGN IN -->
+{% endif %}
+</body>
+</html>

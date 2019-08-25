@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>
+    Elisabeth's Sports Item Catalog | Edit item
+  </title>
+  <link rel="shortcut icon"
+        href="{{ url_for('static', filename='favicon.ico') }}"
+        type="image/x-icon">
+  <link type="text/css"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+        rel="stylesheet"
+        type="text/css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+<script>
+        $.ajax({
+            type: 'GET',
+            url: '/is_user_connected',
+            processData:false,
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            },
+            success:function(result){
+                if (result.status == 'user_connected') {
+                    console.log('User connected!');
+                    var username = result.content.username;
+                    var picture = result.content.picture;
+                    $('#user_data').html(`Signed in as
+                        <span style = "font-weight: bold;">${username}</span>
+                        <img src="${picture}" class="user_img_small">`);
+                    $('#sign_out_button').attr('style', 'display: inline');
+                }
+                else if (result.status == 'no_user_connected') {
+                    console.log('No user connected!');
+                    $('#sign_in_button').attr('style', 'display: inline');
+                }
+            },
+            error:function(jqXHR, exception){
+                $('#site_content').attr('style', 'display: none');
+                $('#error_placeholder').html(jqXHR.responseText);
+            }
+        });
+</script>
+
+<div id="user_header" class="wrapper">
+  <div id="user_data"></div>
+  <div id="sign_out_button" style="display: none;">
+    <a href="{{url_for('sign_out')}}">
+      <button>Sign out</button>
+    </a>
+  </div>
+  <div id="sign_in_button" style="display: none;">
+    <a href="{{url_for('login')}}">
+      <button>Sign in</button>
+    </a>
+  </div>
+</div>
+
+<div id="error_placeholder"></div>
+
+<div id="site_content">
+  <div id="header" class="header">
+    <h1>
+      <a href="{{url_for('index')}}">
+        Elisabeth's Sports Item Catalog
+      </a>
+    </h1>
+  </div>
+  <div>
+    <h2>Edit Item</h2>
+    <div class="block">
+      <form action="{{url_for('edit_item', item_id=item.id)}}" method="post" class="inline">
+        Name:
+        <br>
+        <input type="text" name="name" value="{{item.name}}" placeholder="{{item.name}}" maxlength="100"
+               class="form_field">
+        <br>
+        Description:
+        <br>
+        <input type="text" name="description" value="{{item.description}}" placeholder="{{item.description}}"
+               maxlength="250" class="form_field">
+        <br>
+        Category:
+        <br>
+        <select name="category" value="{{item.category}}">
+          {% for c in categories %}
+          {% if c.name == item.category %}
+          <option value="{{c.name}}" selected>{{c.name}}</option>
+          {% else %}
+          <option value="{{c.name}}">{{c.name}}</option>
+          {% endif %}
+          {% endfor %}
+        </select>
+        <br>
+        <br>
+        <input type="submit" value="Submit" class="submit_button">
+      </form>
+      |
+      <a href="{{url_for('item', item_id=item.id, category=item.category)}}" method="get">
+        <button>Cancel</button>
+      </a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

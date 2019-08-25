@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>
+    Elisabeth's Sports Item Catalog
+  </title>
+  <link rel="shortcut icon"
+        href="{{ url_for('static', filename='favicon.ico') }}"
+        type="image/x-icon">
+  <link type="text/css"
+        rel="stylesheet"
+        href="{{ url_for('static', filename='style.css') }}">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700|Source+Sans+Pro"
+        rel="stylesheet"
+        type="text/css">
+</head>
+<body>
+<div id="header" class="header">
+  <h1>
+    <a href="{{url_for('index')}}">
+      Elisabeth's Sports Item Catalog
+    </a>
+  </h1>
+</div>
+<div>
+  <h2>Logout</h2>
+  <div class="block">
+    Sign-out successful!
+    <br>
+    <h3 style="text-align: center;">
+      {{ result }}
+    </h3>
+    </br>
+    Redirecting to main page...
+
+    <script>
+        setTimeout(function() {
+            window.location.href = "/";
+        }, 4000); // redirect after 4 seconds
+    </script>
+  </div>
+</div>
+</body>
+</html>

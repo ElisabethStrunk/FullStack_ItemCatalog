@@ -1,0 +1,295 @@
+@import "colors.css";
+
+:root {
+  --header-background: var(--color-aqua);
+  --h1-font-size: 75px;
+  --h1-letter-spacing: 20px;
+}
+
+body {
+  background-color: var(--color-v-pastel-blue);
+  margin: 20px 175px;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* header */
+h1 {
+  font-family: "Montserrat:700", sans-serif;
+  font-size: 37.5px;
+  letter-spacing: 10px;
+  text-align: center;
+  color: black;
+  text-shadow: 0px 2px 0px var(--header-background), 0px 4px 0px white;
+}
+
+h2 {
+  font-family: "Montserrat:700", sans-serif;
+  font-size: 25px;
+  letter-spacing: 5px;
+  text-align: left;
+  color: white;
+  background-color: var(--color-papaya);
+  padding: 7px;
+}
+
+h3 {
+  color: #008F95;
+  font-family: 'Source Sans Pro', sans-serif;
+  font-weight: bold;
+}
+
+.herror {
+  font-family: "Montserrat:700", sans-serif;
+  font-size: 20vw;
+  font-weight: bold;
+  color: var(--color-aqua); /* fallback color */
+  text-align: center;
+  background: url(ramiro-mendes-2JMjC_jqbBk-unsplash.jpg) no-repeat;
+  background-size: cover;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#header {
+  background-color: var(--header-background);
+  overflow: auto;
+  text-align: center;
+  clear: both;
+  margin: 0px 0px 20px 0px;
+  padding: 0px 0px;
+}
+
+#header_pic {
+  border-radius: 0%;
+  width: 50%;
+  height: auto;
+  padding: 0px 0px;
+  margin: 0px;
+  float: right;
+}
+
+#user_data {
+  font-family: 'Source Sans Pro', Arial, sans-serif;
+  font-size: 12px;
+  text-align: right;
+  display: inline;
+  letter-spacing: 1px;
+}
+
+#user_header {
+  float: right;
+  display: table;
+  margin: 0px 0px 12px 0px;
+}
+
+/* footer */
+footer {
+  clear: both;
+  padding: 25px 0px;
+  text-align: right;
+}
+
+#thank-you-note {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 12px;
+}
+
+/* presentational */
+time {
+  font-style: oblique;
+}
+
+img {
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.aqua,
+.aqua:link,
+.aqua:visited {
+  color: var(--color-aqua);
+}
+
+.block {
+  padding: 7px;
+}
+
+.clear {
+  clear: both;
+}
+
+.form_field_big {
+  width: 75%;
+  height: 400px;
+  text-align: top;
+  word-wrap: break-word;
+}
+
+.form_field {
+  width: 75%;
+}
+
+.inline {
+  display: inline;
+}
+
+.middle_block {
+  width: 50%;
+  margin: auto;
+}
+
+.wrapper {
+  display: table-cell;
+  vertical-align: middle;
+}
+
+/* user profile pictures */
+.user_img_big {
+  width: 150px;
+  height: 150px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+}
+
+.user_img_small {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  padding: 0px 8px 3px 8px;
+  vertical-align: middle;
+}
+
+/* links */
+a:link {
+  color: black;
+  text-decoration:  none;
+}
+
+a:visited {
+  color: black;
+  text-decoration:  none;
+}
+
+a:hover,
+.aqua:hover {
+  color: var(--color-mustard);
+}
+
+/* buttons */
+/* code initially created with https://www.bestcssbuttongenerator.com */
+button,
+.submit_button {
+  -moz-box-shadow: inset 0px 1px 3px 0px #91b8b3;
+  -webkit-box-shadow: inset 0px 1px 3px 0px #91b8b3;
+  box-shadow: inset 0px 1px 3px 0px #91b8b3;
+  background: -webkit-gradient(linear, left top, left bottom,
+                  color-stop(0.05, #009095), color-stop(1, #166366));
+  background: -moz-linear-gradient(top, #009095 5%, #166366 100%);
+  background: -webkit-linear-gradient(top, #009095 5%, #166366 100%);
+  background: -o-linear-gradient(top, #009095 5%, #166366 100%);
+  background: -ms-linear-gradient(top, #009095 5%, #166366 100%);
+  background: linear-gradient(to bottom, #009095 5%, #166366 100%);
+  filter:progid: DXImageTransform.Microsoft.gradient(startColorstr='#009095',
+                      endColorstr='#166366',GradientType=0);
+  background-color: #009095;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  border: 1px solid #566963;
+  display: inline-block;
+  cursor: pointer;
+  color: #ffffff;
+  font-family: 'Source Sans Pro', Arial, sans-serif;
+  font-size: 12px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 6px 20px;
+  text-decoration: none;
+  text-shadow: 0px -1px 0px #2b665e;
+}
+
+button:hover,
+.submit_button:hover {
+  background: -webkit-gradient(linear, left top, left bottom,
+                  color-stop(0.05, #166366), color-stop(1, #009095));
+  background: -moz-linear-gradient(top, #166366 5%, #009095 100%);
+  background: -webkit-linear-gradient(top, #166366 5%, #009095 100%);
+  background: -o-linear-gradient(top, #166366 5%, #009095 100%);
+  background: -ms-linear-gradient(top, #166366 5%, #009095 100%);
+  background: linear-gradient(to bottom, #166366 5%, #009095 100%);
+  filter:progid: DXImageTransform.Microsoft.gradient(startColorstr='#166366',
+                      endColorstr='#009095',GradientType=0);
+  background-color:#166366;
+}
+
+button:active,
+.submit_button:active {
+  position:relative;
+  top:1px;
+}
+
+.signin_buttons {
+  display: table;
+}
+
+.button_lineup {
+  margin: 20px 0px;
+}
+
+/* code for google sign-in button adapted from google developer portal
+   https://developers.google.com/identity/sign-in/web/sign-in */
+.abcRioButtonContents {
+  font-family: Roboto, arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: .21px;
+  margin-left: 6px;
+  margin-right: 6px;
+  vertical-align: top;
+  font-size: 13px;
+  line-height: 21px;
+  color: #757575;
+}
+
+.abcRioButton {
+  -webkit-border-radius: 1px;
+  border-radius: 1px;
+  -webkit-box-shadow 0 2px 4px 0px rgba(0,0,0,.25): ;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.25);
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-transition: background-color .218s, border-color .218s, box-shadow .218s;
+  transition: background-color .218s, border-color .218s, box-shadow .218s;
+  -webkit-user-select: none;
+  -webkit-appearance: none;
+  background-color: #fff;
+  background-image: none;
+  color: #262626;
+  cursor: pointer;
+  outline: none;
+  overflow: hidden;
+  position: relative;
+  text-align: center;
+  vertical-align: middle;
+  white-space: nowrap;
+  padding: 8px 3px 4px 8px;
+  height: 36px;
+  width: auto;
+  display: inline-block
+}
+
+.abcRioButton:hover {
+  box-shadow: 0 0 8px #7a95f1;
+  outline: none;
+}
+
+.abcRioButton:active {
+  background-color: #eee;
+  color: #6d6d6d;
+}
