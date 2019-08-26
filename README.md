@@ -110,7 +110,7 @@ More information about OAuth 2.0 with Facebook can be found [here](https://devel
 ## __Running the application__
 
 Within the _app_ directory find _application.py_.<br>
-Run _application.py_.<br>
+Run _application.py_. Make sure you run it with **Python 3**!<br>
 Open your browser ([Google Chrome](https://www.google.com/chrome/) was used for development and testing).<br>
 Visit http://localhost:5000 to see the item catalog.<br>
 
