@@ -12,13 +12,13 @@ The following instructions will get your copy of the project up and running on y
 You need [Python 3](https://www.python.org/downloads/) to run the application. The application was developed and tested with Python 3.7.<br>
 Furthermore, several packages must be installed:
 ```
-pip install "httplib2==0.13.1"
-pip install "Flask==1.1.1"
-pip install "oauth2client==4.1.3"
-pip install "pipenv==2018.11.26"
+pip3 install "httplib2==0.13.1"
+pip3 install "Flask==1.1.1"
+pip3 install "oauth2client==4.1.3"
+pip3 install "pipenv==2018.11.26"
 pipenv install "requests==2.22.0"
-pip install "SQLAlchemy==1.3.6"
-pip install "bleach==3.1.0"
+pip3 install "SQLAlchemy==1.3.6"
+pip3 install "bleach==3.1.0"
 ```
 
 ## Preparing the OAuth 2.0 mechanism
