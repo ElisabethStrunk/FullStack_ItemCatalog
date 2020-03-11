@@ -20,7 +20,7 @@
 <script>
         $.ajax({
             type: 'GET',
-            url: '/is_user_connected',
+            url: "{{url_for('check_if_user_connected')}}",
             processData:false,
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
